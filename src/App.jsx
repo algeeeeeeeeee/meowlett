@@ -3110,7 +3110,7 @@ export default function App() {
                   <React.Fragment>
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
                       <div style={{ width:88, height:88, borderRadius:26, background:`${themeAccent}14`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Flag size={38} color={themeAccent} strokeWidth={1.5}/>
+                        <CirclePlus size={38} color={themeAccent} strokeWidth={1.5}/>
                       </div>
                     </div>
                     <p style={{ fontSize:18,fontWeight:900,color:T.text,marginBottom:8 }}>{lang==="en"?"No transactions yet":"Belum ada transaksi"}</p>
@@ -4014,7 +4014,7 @@ export default function App() {
             <div className="fi scroll-area modal-up" style={{ background:T.modalBg, borderRadius:"22px 22px 0 0", padding:22, paddingBottom:`22px + ${kbHeight > 0 ? kbHeight : 0}px`, width:"100%", maxHeight:"80vh", overflowY:"auto", }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                  <PaintbrushVertical size={16} color={T.primaryText} strokeWidth={2}/>
+                  <Palette size={16} color={T.primaryText} strokeWidth={2}/>
                   <p style={{ fontSize:16, fontWeight:800, color:T.text }}>{L.colorTheme}</p>
                 </div>
                 <button onClick={() => setShowThemePicker(false)} style={{ background:T.btnG, border:"none", borderRadius:10, padding:"6px 14px", cursor:"pointer", fontSize:13, fontWeight:700, color:T.btnGText }}>{L.done}</button>
@@ -4505,7 +4505,7 @@ export default function App() {
                 <div style={{ padding:"14px 0" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14 }}>
                     <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <PaintbrushVertical size={18} color={T.primaryText} strokeWidth={2}/>
+                      <Palette size={18} color={T.primaryText} strokeWidth={2}/>
                     </div>
                     <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.colorTheme}</p>
                   </div>
