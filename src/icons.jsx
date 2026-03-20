@@ -102,3 +102,7 @@ export const CheckCheck     = fallback('CheckCheck', 'Check', 'CheckCircle');
 export const Hash           = fallback('Hash', 'Tag', 'Bookmark');
 export const AlarmClock     = fallback('AlarmClock', 'Clock', 'Bell');
 export const BellRing       = fallback('BellRing', 'Bell', 'BellOff');
+export const Users          = fallback('Users', 'UsersRound', 'User');
+export const UserPlus       = fallback('UserPlus', 'Users', 'User');
+export const Equal          = fallback('Equal', 'Equals', 'Minus');
+export const Receipt        = fallback('Receipt', 'FileText', 'File');
