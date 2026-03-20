@@ -1,4 +1,4 @@
-import { AlertCircle, AlertTriangle, BarChart2, Calculator2, Calendar, CheckCircle, Download, Inbox, Share2, TrendingUp, Zap } from "../icons.jsx";
+import { AlertCircle, AlertTriangle, Ban, BarChart2, Calculator2, Calendar, CheckCircle, DiamondPlus, Download, Flag, Globe, HandCoins, HeartPulse, Inbox, PaintRoller, Rocket, Share2, TrendingUp, X, Zap } from "../icons.jsx";
 import { formatRp, fmtDate, getCatLabel, getMonth, haptic } from "../utils/helpers.js";
 import { darken, lighten } from "../utils/theme.js";
 import { CatIcon } from "./ui.jsx";
@@ -355,7 +355,7 @@ export default function TabReport({ ctx }) {
               <div className="card" style={{ padding:40, textAlign:"center", ...CSN }}>
                 <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                   <div style={{ width:60, height:60, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <Inbox size={28} color={T.accentText} strokeWidth={1.5}/>
+                    <X size={28} color={T.accentText} strokeWidth={1.5}/>
                   </div>
                 </div>
                 <p style={{ color:T.textSub, fontSize:14 }}>{L.noTxDate}</p>
