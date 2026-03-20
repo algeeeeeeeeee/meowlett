@@ -1,7 +1,7 @@
 import {
   PiggyBank, Smartphone, Laptop, Car, Home, Plane, Gift, Camera,
   Book, Music, Gamepad2, Heart, ShoppingBag, Dumbbell, Wallet,
-  Sparkles, Leaf, Droplets, Flame, Wind, Palette
+  Sparkles, Leaf, Droplets, Flame, Wind, Palette, Apple, Grape, PaintRoller
 } from "../icons.jsx";
 
 export const DEFAULT_CATEGORIES = {
@@ -17,13 +17,13 @@ export const DEFAULT_CATEGORIES = {
 };
 
 export const THEME_PRESETS = [
-  { id: "green",  label: "Green",  labelId: "Hijau",   primary: "#166534", accent: "#4ade80", icon: "Leaf"     },
-  { id: "blue",   label: "Blue",   labelId: "Biru",    primary: "#1e3a8a", accent: "#60a5fa", icon: "Droplets" },
-  { id: "purple", label: "Purple", labelId: "Ungu",    primary: "#4c1d95", accent: "#c084fc", icon: "Sparkles" },
-  { id: "rose",   label: "Rose",   labelId: "Merah",   primary: "#881337", accent: "#fb7185", icon: "Heart"    },
-  { id: "orange", label: "Orange", labelId: "Oranye",  primary: "#7c2d12", accent: "#fb923c", icon: "Flame"    },
-  { id: "teal",   label: "Teal",   labelId: "Tosca",   primary: "#134e4a", accent: "#2dd4bf", icon: "Wind"     },
-  { id: "custom", label: "Custom", labelId: "Kustom",  primary: "#166534", accent: "#4ade80", icon: "Palette"  },
+  { id: "green",  label: "Green",  labelId: "Hijau",   primary: "#166534", accent: "#4ade80", icon: "Leaf"        },
+  { id: "blue",   label: "Blue",   labelId: "Biru",    primary: "#1e3a8a", accent: "#60a5fa", icon: "Apple"       },
+  { id: "purple", label: "Purple", labelId: "Ungu",    primary: "#4c1d95", accent: "#c084fc", icon: "Grape"       },
+  { id: "rose",   label: "Rose",   labelId: "Merah",   primary: "#881337", accent: "#fb7185", icon: "Apple"       },
+  { id: "orange", label: "Orange", labelId: "Oranye",  primary: "#7c2d12", accent: "#fb923c", icon: "Grape"       },
+  { id: "teal",   label: "Teal",   labelId: "Tosca",   primary: "#134e4a", accent: "#2dd4bf", icon: "Wind"        },
+  { id: "custom", label: "Custom", labelId: "Kustom",  primary: "#166534", accent: "#4ade80", icon: "PaintRoller" },
 ];
 
 export const GOAL_ICONS = {
@@ -45,7 +45,7 @@ export const GOAL_ICONS = {
   star:     { Icon: Sparkles,    label: "Impian"    },
 };
 
-export const PRESET_ICONS = { Leaf, Droplets, Heart, Flame, Wind, Palette, Sparkles };
+export const PRESET_ICONS = { Leaf, Droplets, Heart, Flame, Wind, Palette, Sparkles, Apple, Grape, PaintRoller };
 
 export const ICON_OPTIONS = [
   // Makanan & Minuman
