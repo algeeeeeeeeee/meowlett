@@ -2608,7 +2608,7 @@ export default function App() {
                 </div>
                 <p style={{ fontSize:28, fontWeight:900, color:T.text, lineHeight:1 }}>{streak.count}<span style={{ fontSize:13, fontWeight:700, color:T.textSub, marginLeft:2 }}>{lang==="en"?" days":" hari"}</span></p>
                 <p style={{ fontSize:10, color:T.textSub, display:"flex", alignItems:"center", gap:4, marginBottom:6 }}>
-                  {streak.count >= 7 ? <><Flame size={11} color={themeAccent} strokeWidth={2}/>{lang==="en"?"On fire!":"Konsisten!"}</> : streak.count >= 3 ? <><TrendingUp size={11} color="#4ade80" strokeWidth={2}/>{lang==="en"?"Keep going!":"Teruskan!"}</> : <>{lang==="en"?"Open daily":"Buka tiap hari"}</>}
+                  {streak.count >= 7 ? <><Flame size={11} color={themeAccent} strokeWidth={2}/>{lang==="en"?"On fire!":"Konsisten!"}</> : streak.count >= 3 ? <><DiamondPlus size={11} color="#4ade80" strokeWidth={2}/>{lang==="en"?"Keep going!":"Teruskan!"}</> : <>{lang==="en"?"Open daily":"Buka tiap hari"}</>}
                 </p>
                 {/* Fun facts harian */}
                 {(() => {
@@ -3325,7 +3325,7 @@ export default function App() {
                 <div onClick={() => { haptic("light"); setShowRecurIncomePanel(p=>!p); }} style={{ display:"flex", alignItems:"center", gap:6, cursor:"pointer", flex:1 }}>
                   <div style={{ flex:1, height:1, background:"#4ade8033" }}/>
                   <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                    <TrendingUp size={11} color="#4ade80" strokeWidth={2}/>
+                    <DiamondPlus size={11} color="#4ade80" strokeWidth={2}/>
                     <p style={{ fontSize:11, fontWeight:800, color:"#4ade80", letterSpacing:1.5, whiteSpace:"nowrap" }}>{lang==="en"?"RECURRING INCOME":"PEMASUKAN RUTIN"}</p>
                     <ChevronDown size={11} color="#4ade80" strokeWidth={2.5} style={{ transform: showRecurIncomePanel?"rotate(180deg)":"rotate(0)", transition:"transform 0.2s" }}/>
                   </div>
@@ -3335,7 +3335,7 @@ export default function App() {
 
               {showRecurIncomePanel && <div className="card" style={{ padding:16, marginBottom:10, border:"1px solid #4ade8033" }}>
                 <p style={{ fontSize:13, fontWeight:800, color:"#4ade80", marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
-                  <TrendingUp size={15} color="#4ade80" strokeWidth={2}/> {lang==="en"?"Add Recurring Income":"Tambah Pemasukan Rutin"}
+                  <DiamondPlus size={15} color="#4ade80" strokeWidth={2}/> {lang==="en"?"Add Recurring Income":"Tambah Pemasukan Rutin"}
                 </p>
                 <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
                   <input className="inp" placeholder={lang==="en"?"Name (e.g. Salary, Freelance...)":"Nama (mis: Gaji, Freelance...)"} value={recurIncomeForm.description}
@@ -4014,7 +4014,7 @@ export default function App() {
             <div className="fi scroll-area modal-up" style={{ background:T.modalBg, borderRadius:"22px 22px 0 0", padding:22, paddingBottom:`22px + ${kbHeight > 0 ? kbHeight : 0}px`, width:"100%", maxHeight:"80vh", overflowY:"auto", }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                  <Palette size={16} color={T.primaryText} strokeWidth={2}/>
+                  <PaintbrushVertical size={16} color={T.primaryText} strokeWidth={2}/>
                   <p style={{ fontSize:16, fontWeight:800, color:T.text }}>{L.colorTheme}</p>
                 </div>
                 <button onClick={() => setShowThemePicker(false)} style={{ background:T.btnG, border:"none", borderRadius:10, padding:"6px 14px", cursor:"pointer", fontSize:13, fontWeight:700, color:T.btnGText }}>{L.done}</button>
@@ -4532,7 +4532,7 @@ export default function App() {
                     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
                       <div style={{ display:"flex", alignItems:"center", gap:5 }}>
                         <PaintbrushVertical size={12} color={T.primaryText} strokeWidth={2}/>
-                        <p style={{ fontSize:12, fontWeight:800, color:T.text }}>Custom</p>
+                        <p style={{ fontSize:12, fontWeight:800, color:T.text }}>{lang==="en" ? "Custom" : "Kustom"}</p>
                       </div>
                       <button onClick={() => { haptic(); triggerThemeChange(() => setThemePresetId("custom")); }}
                         style={{ background: themePresetId==="custom" ? themePrimary : T.btnG, color: themePresetId==="custom" ? "white" : T.btnGText, border:"none", borderRadius:8, padding:"5px 10px", cursor:"pointer", fontSize:11, fontWeight:700 }}>
