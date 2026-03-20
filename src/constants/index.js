@@ -48,9 +48,25 @@ export const GOAL_ICONS = {
 export const PRESET_ICONS = { Leaf, Droplets, Heart, Flame, Wind, Palette, Sparkles };
 
 export const ICON_OPTIONS = [
-  "utensils","car","heart","shoppingbag","gamepad","pill","filetext","package",
-  "coffee","pizza","plane","book","music","monitor","gift","dumbbell","pawprint",
-  "leaf","dollar","palette","droplets","shirt","wrench","film","beer","umbrella","flower","banknote"
+  // Makanan & Minuman
+  "utensils","coffee","pizza","beer",
+  // Transportasi & Perjalanan
+  "car","plane",
+  // Belanja & Gaya Hidup
+  "shoppingbag","shirt","palette","gift",
+  // Kesehatan & Olahraga
+  "heart","pill","dumbbell",
+  // Keuangan
+  "dollar","banknote","wallet","piggybank","trendingup","coins",
+  // Rumah & Utilitas
+  "home","droplets","zap","wrench","flame","wind",
+  // Teknologi & Hiburan
+  "monitor","smartphone","laptop","gamepad","music","film","book",
+  // Alam & Hewan
+  "leaf","pawprint","flower","umbrella",
+  // Lain-lain
+  "package","filetext","sparkles","target","repeat",
+  "inbox","users","clock","calendar","alarmclock","bell","tag","receipt",
 ];
 
 export const COLOR_OPTIONS = [
