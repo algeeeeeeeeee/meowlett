@@ -847,8 +847,8 @@ export default function App() {
   const TP  = dark ? lighten(themePrimary,0.45) : themePrimary;
   const hex2rgb = h => { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return r+","+g+","+b; };
   const headerShadow = (t) => {
-    if (t === "date") return "0 4px 20px rgba(190,24,93,0.4)";
-    return "0 4px 20px rgba("+hex2rgb(dark?themePrimary:themeAccent)+",0.35)";
+    if (t === "date") return "0 2px 8px rgba(190,24,93,0.25), 0 1px 4px rgba(0,0,0,0.3)";
+    return `0 1px 4px ${T.cardShadow}`;
   };
   const CS  = { background:T.card, border:`1px solid ${T.cardBorder}`, boxShadow:`0 1px 4px ${T.cardShadow}` };
   const CSN = { background:T.card, border:`1px solid ${T.cardBorder}` };
@@ -2660,21 +2660,29 @@ export default function App() {
               </div>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                 <span style={{ fontSize:12, fontWeight:700, color:healthScore.color }}>{healthScore.label}</span>
-                {/* Mini breakdown */}
-                <div style={{ display:"flex", gap:6 }}>
-                  {[
-                    { key:"ratio", label:lang==="en"?"Budget":"Rasio", max:30 },
-                    { key:"consistency", label:lang==="en"?"Record":"Catat", max:25 },
-                    { key:"goals", label:lang==="en"?"Goals":"Target", max:15 },
-                  ].map(({key,label,max}) => (
-                    <div key={key} style={{ textAlign:"center" }}>
-                      <div style={{ width:28, height:28, borderRadius:50, background: healthScore.scores[key]>=max*0.7 ? healthScore.color+"22" : T.catBg, border:`1.5px solid ${healthScore.scores[key]>=max*0.7 ? healthScore.color : T.cardBorder}`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <span style={{ fontSize:9, fontWeight:800, color: healthScore.scores[key]>=max*0.7 ? healthScore.color : T.textSub }}>{healthScore.scores[key]}</span>
-                      </div>
-                      <p style={{ fontSize:8, color:T.textSub, marginTop:2, fontWeight:600 }}>{label}</p>
+                {/* Daily rotating tip */}
+                {(() => {
+                  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+                  const tips = lang==="en" ? [
+                    { key:"ratio",       text:"Try spending under 70% of income" },
+                    { key:"consistency", text:"Record every transaction today" },
+                    { key:"goals",       text:"Set a savings target to boost score" },
+                    { key:"streak",      text:"Open the app daily to build your streak" },
+                    { key:"budget",      text:"Set category budgets to stay on track" },
+                  ] : [
+                    { key:"ratio",       text:"Coba keluarkan di bawah 70% pemasukan" },
+                    { key:"consistency", text:"Catat setiap transaksi hari ini" },
+                    { key:"goals",       text:"Buat target tabungan untuk naikkan skor" },
+                    { key:"streak",      text:"Buka app tiap hari untuk jaga streak" },
+                    { key:"budget",      text:"Atur budget per kategori supaya terkontrol" },
+                  ];
+                  const tip = tips[dayOfYear % tips.length];
+                  return (
+                    <div style={{ background:healthScore.color+"15", borderRadius:8, padding:"4px 10px", maxWidth:"55%" }}>
+                      <p style={{ fontSize:10, fontWeight:700, color:healthScore.color, lineHeight:1.4, textAlign:"right" }}>{tip.text}</p>
                     </div>
-                  ))}
-                </div>
+                  );
+                })()}
               </div>
             </div>
 
