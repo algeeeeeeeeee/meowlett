@@ -59,13 +59,26 @@ function Ic({ icon, size = 18, color, style = {} }) {
 }
 
 const LUCIDE_MAP = {
-  utensils: Utensils, car: Car, heart: Heart, shoppingbag: ShoppingBag,
-  gamepad: Gamepad2, pill: Pill, filetext: FileText, package: Package,
-  coffee: Coffee, pizza: Pizza, plane: Plane, book: Book, music: Music,
-  monitor: Monitor, gift: Gift, dumbbell: Dumbbell, pawprint: PawPrint,
-  leaf: Leaf, dollar: CircleDollarSign, palette: Palette, droplets: Droplets,
-  shirt: Shirt, wrench: Wrench, film: Film, beer: Beer, umbrella: Umbrella,
-  flower: Flower2, banknote: Banknote,
+  // Makanan & Minuman
+  utensils: Utensils, coffee: Coffee, pizza: Pizza, beer: Beer,
+  // Transportasi & Perjalanan
+  car: Car, plane: Plane,
+  // Belanja & Gaya Hidup
+  shoppingbag: ShoppingBag, shirt: Shirt, palette: Palette, gift: Gift,
+  // Kesehatan & Olahraga
+  heart: Heart, pill: Pill, dumbbell: Dumbbell,
+  // Keuangan
+  dollar: CircleDollarSign, banknote: Banknote, wallet: Wallet, piggybank: PiggyBank, trendingup: TrendingUp, coins: Coins,
+  // Rumah & Utilitas
+  home: Home, droplets: Droplets, zap: Zap, wrench: Wrench, flame: Flame, wind: Wind,
+  // Teknologi & Hiburan
+  monitor: Monitor, smartphone: Smartphone, laptop: Laptop, gamepad: Gamepad2, music: Music, film: Film, book: Book,
+  // Alam & Hewan
+  leaf: Leaf, pawprint: PawPrint, flower: Flower2, umbrella: Umbrella,
+  // Lain-lain
+  package: Package, filetext: FileText, sparkles: Sparkles, target: Target, repeat: Repeat,
+  inbox: Inbox, users: Users, clock: Clock, calendar: Calendar, search: Search,
+  alarmclock: AlarmClock, bell: Bell, star: Sparkles, tag: Tag, receipt: Receipt,
 };
 const CatIcon = ({ iconKey, size = 18, color }) => {
   const Icon = LUCIDE_MAP[iconKey] || Package;
