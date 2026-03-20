@@ -17,7 +17,7 @@ import {
   BadgeDollarSign, User, ChartPie,
   Sun, Moon, SlidersHorizontal,
   CircleDollarSign, AlertTriangle, CheckCircle, Search, Inbox,
-  ArrowRight, Banknote, Download, Bell, BellOff, X, Camera, Settings,
+  ArrowRight, Banknote, Download, Star, Bell, BellOff, X, Camera, Settings,
   WifiOff, Repeat, AlertCircle, Sparkles, Flame, Wind, Zap, Smartphone, Laptop, ChevronDown, ChevronRight, Target, Save, Upload, Share2, Calculator2,
   CreditCard, ImagePlus, Image, ZoomIn, AlarmClock, BellRing, CheckCheck, Tag, Tags,
   Users, UserPlus, Equal, Receipt,
@@ -230,7 +230,8 @@ const STYLES = `
 const THEME_LABELS = { green:"themeGreen", blue:"themeBlue", purple:"themePurple", rose:"themeRose", orange:"themeOrange", teal:"themeTeal" };
 
 // ── Split Bills Modal ─────────────────────────────────────────────────────────
-function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAccent, themePrimary, dark, lang, L, formatRp, parseRpInput, haptic, showToast }) {
+function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAccent, themePrimary, dark, lang, formatRp, parseRpInput, haptic, showToast }) {
+  const L = LANG[lang] || LANG.id;
   const [view, setView] = React.useState("list"); // list | form | detail
   const [editId, setEditId] = React.useState(null);
   const [detail, setDetail] = React.useState(null);
@@ -270,7 +271,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
 
   const del = (id) => {
     setSplitBills(p => p.filter(x => x.id !== id));
-    showToast("ok:"+(lang==="en"?"Deleted":"Dihapus"));
+    showToast("ok:"+L.splitDeleted.replace("ok:",""));
     setView("list"); setDetail(null); haptic();
   };
 
@@ -322,7 +323,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
             {view==="list" && (
               <button onClick={() => { resetForm(); setEditId(null); setView("form"); }}
                 style={{ background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, border:"none", borderRadius:10, padding:"6px 12px", color:"white", fontSize:12, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", gap:5, fontFamily:"inherit" }}>
-                <Plus size={13} strokeWidth={2.5}/> {lang==="en"?"New":"Baru"}
+                <Plus size={13} strokeWidth={2.5}/> {L.splitBtnNew}
               </button>
             )}
             <button onClick={onClose} style={{ width:30, height:30, borderRadius:"50%", background:T.card2, border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -340,27 +341,27 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
               <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:4 }}>
                 {editId ? (L.splitEdit) : (L.splitNew)}
               </p>
-              <input className="inp" placeholder={lang==="en"?"Title (e.g. Dinner at X)":"Judul (mis. Makan di X)"}
+              <input className="inp" placeholder={L.splitTitle}
                 value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))}
                 style={{ background:T.inp, border:`1.5px solid ${T.inpBorder}`, color:T.text }}/>
-              <input className="inp" type="text" inputMode="numeric" placeholder={lang==="en"?"Total bill (e.g. 300.000)":"Total tagihan (mis. 300.000)"}
+              <input className="inp" type="text" inputMode="numeric" placeholder={L.splitTotal}
                 value={form.totalDisplay||""}
                 onFocus={e=>e.target.select()}
                 onChange={e=>{ const {display,raw}=parseRpInput(e.target.value); setForm(f=>({...f,total:raw,totalDisplay:display})); }}
                 style={{ background:T.inp, border:`1.5px solid ${T.inpBorder}`, color:T.text }}/>
               <div>
                 <p style={{ fontSize:10, fontWeight:700, color:T.textSub, marginBottom:4 }}>
-                  {lang==="en"?"Members (comma-separated)":"Anggota (pisah koma)"}
+                  {L.splitMembers}
                 </p>
-                <input className="inp" placeholder={lang==="en"?"e.g. Alice, Bob, Charlie":"mis. Andi, Budi, Cici"}
+                <input className="inp" placeholder={L.splitMembersPlaceholder}
                   value={form.members} onChange={e=>setForm(f=>({...f,members:e.target.value}))}
                   style={{ background:T.inp, border:`1.5px solid ${T.inpBorder}`, color:T.text }}/>
               </div>
               <div>
                 <p style={{ fontSize:10, fontWeight:700, color:T.textSub, marginBottom:4 }}>
-                  {lang==="en"?"Who paid?":"Siapa yang bayar duluan?"}
+                  {L.splitPayer}
                 </p>
-                <input className="inp" placeholder={lang==="en"?"Name of payer":"Nama yang bayar"}
+                <input className="inp" placeholder={L.splitPayerPlaceholder}
                   value={form.paidBy} onChange={e=>setForm(f=>({...f,paidBy:e.target.value}))}
                   style={{ background:T.inp, border:`1.5px solid ${T.inpBorder}`, color:T.text }}/>
               </div>
@@ -375,11 +376,11 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
               )}
               <div style={{ display:"flex", gap:8, marginTop:4 }}>
                 <button onClick={() => { haptic("success"); save(); }} style={{ flex:1, padding:"12px 0", borderRadius:14, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, border:"none", color:"white", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
-                  {lang==="en"?"Save":"Simpan"}
+                  {L.splitSave}
                 </button>
                 <button onClick={() => { setView("list"); setEditId(null); resetForm(); }}
                   style={{ flex:.5, padding:"12px 0", borderRadius:14, background:T.btnG||T.card2, border:`1.5px solid ${T.btnGBorder||T.cardBorder}`, color:T.btnGText||T.textSub, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-                  {lang==="en"?"Cancel":"Batal"}
+                  {L.splitCancel}
                 </button>
               </div>
             </div>
@@ -401,15 +402,15 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                   <div style={{ display:"flex", gap:20 }}>
                     <div>
                       <p style={{ fontSize:20, fontWeight:900, color:"white" }}>{formatRp(bill.total)}</p>
-                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontWeight:600 }}>{lang==="en"?"TOTAL":"TOTAL"}</p>
+                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontWeight:600 }}>{L.splitTotalLabel}</p>
                     </div>
                     <div>
                       <p style={{ fontSize:20, fontWeight:900, color:"white" }}>{formatRp(perPerson)}</p>
-                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontWeight:600 }}>{lang==="en"?"PER PERSON":"PER ORANG"}</p>
+                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontWeight:600 }}>{L.splitPerPersonLabel}</p>
                     </div>
                     <div>
                       <p style={{ fontSize:20, fontWeight:900, color:"white" }}>{paidCount}/{bill.members.length}</p>
-                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontWeight:600 }}>{lang==="en"?"PAID":"LUNAS"}</p>
+                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.6)", fontWeight:600 }}>{L.splitPaidLabel}</p>
                     </div>
                   </div>
                 </div>
@@ -471,7 +472,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                   </button>
                   <button onClick={() => { setView("list"); setDetail(null); }}
                     style={{ flex:1, padding:"12px 0", borderRadius:12, background:T.card2, border:`1.5px solid ${T.cardBorder}`, color:T.textSub, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-                    ← {lang==="en"?"Back":"Kembali"}
+                    {L.splitBack}
                   </button>
                 </div>
               </div>
@@ -2271,7 +2272,7 @@ export default function App() {
       {/* Install banner */}
       {showInstallBanner && (
         <div style={{ position:"fixed",bottom:"72px",left:14,right:14,zIndex:500,background:themePrimary,borderRadius:20,padding:"14px 16px",display:"flex",alignItems:"center",gap:12,boxShadow:`0 8px 32px ${themePrimary}88` }}>
-          <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+          <Star size={28} color="white" strokeWidth={1.5}/>
           <div style={{ flex:1 }}>
             <p style={{ fontSize:13,fontWeight:800,color:"white" }}>Pasang ke Home Screen</p>
             <p style={{ fontSize:11,color:"rgba(255,255,255,0.7)" }}>Akses lebih cepat, bisa offline!</p>
@@ -3148,7 +3149,7 @@ export default function App() {
         )}
 
         {showCicilanModal && <CicilanModal show={showCicilanModal} onClose={()=>setShowCicilanModal(false)} cicilan={cicilan} setCicilan={setCicilan} lang={lang} L={L} T={T} themeAccent={themeAccent} themePrimary={themePrimary} formatRp={formatRp} parseRpInput={parseRpInput} haptic={haptic} showToast={showToast}/>}
-        {showSplitBills && <SplitBillsModal show={showSplitBills} onClose={()=>setShowSplitBills(false)} splitBills={splitBills} setSplitBills={setSplitBills} T={T} themeAccent={themeAccent} themePrimary={themePrimary} dark={dark} lang={lang} L={L} formatRp={formatRp} parseRpInput={parseRpInput} haptic={haptic} showToast={showToast}/>}
+        {showSplitBills && <SplitBillsModal show={showSplitBills} onClose={()=>setShowSplitBills(false)} splitBills={splitBills} setSplitBills={setSplitBills} T={T} themeAccent={themeAccent} themePrimary={themePrimary} dark={dark} lang={lang} formatRp={formatRp} parseRpInput={parseRpInput} haptic={haptic} showToast={showToast}/>}
 
         {showReminderModal && <ReminderModal
           show={showReminderModal} onClose={()=>setShowReminderModal(false)}
