@@ -3006,7 +3006,7 @@ export default function App() {
         {/* ── TRANSACTIONS ── */}
         {tab === "transactions" && (
           <div key="transactions" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0 0 0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
 
             <div style={{ position:"relative",marginBottom:10 }}>
               <Search size={15} color={T.textSub} strokeWidth={2} style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }}/>
@@ -3386,7 +3386,7 @@ export default function App() {
         {/* ── REPORT ── */}
         {tab === "report" && (
           <div key="report" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, overflowX:"hidden", width:"100%", boxSizing:"border-box", paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, overflowX:"hidden", width:"100%", boxSizing:"border-box", paddingBottom:"16px" }}>
 
             {/* Budget warnings */}
             {Object.entries(budgets).filter(([k,v]) => {
@@ -3833,7 +3833,7 @@ export default function App() {
         {/* ── DATE ── */}
         {tab === "date" && (
           <div key="date" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
 
             {/* Budget Date card */}
             <div className="card" style={{ padding:"24px 24px 20px", marginTop:0, marginBottom:14, background: dark?"#1a0d14":"linear-gradient(135deg,#fdf2f8,#fce7f3)", border: dark?"1px solid #3d1a2e":"1px solid #f9a8d4" }}>
@@ -4055,7 +4055,7 @@ export default function App() {
         {/* ── SETTINGS TAB ── */}
         {tab === "settings" && (
           <div key="settings" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
 
             {/* Profile section */}
             <div style={{ background:T.card, borderRadius:20, border:`1px solid ${T.cardBorder}`, overflow:"hidden", marginBottom:12, boxShadow:`0 1px 4px ${T.cardShadow}` }}>
