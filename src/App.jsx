@@ -847,7 +847,6 @@ export default function App() {
   const TP  = dark ? lighten(themePrimary,0.45) : themePrimary;
   const hex2rgb = h => { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return r+","+g+","+b; };
   const headerShadow = (t) => {
-    if (t === "date") return "0 2px 8px rgba(190,24,93,0.25), 0 1px 4px rgba(0,0,0,0.3)";
     return `0 1px 4px ${T.cardShadow}`;
   };
   const CS  = { background:T.card, border:`1px solid ${T.cardBorder}`, boxShadow:`0 1px 4px ${T.cardShadow}` };
