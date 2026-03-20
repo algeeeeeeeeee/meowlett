@@ -1,4 +1,4 @@
-import { ChevronDown, CirclePlus, Hash, Image, Pencil, Plus, Repeat, Save, Search, Trash2, Wallet, X } from "../icons.jsx";
+import { ChevronDown, CirclePlus, DiamondPlus, Hash, Image, Pencil, Plus, Repeat, Save, Search, Trash2, Wallet, X } from "../icons.jsx";
 import { formatRp, dateLabel, getCatLabel, groupByDate, haptic, parseRpInput, today } from "../utils/helpers.js";
 import { CatIcon, SwipeRow } from "./ui.jsx";
 
@@ -181,7 +181,7 @@ export default function TabTransactions({ ctx }) {
                   <div onClick={() => setShowRecurPanel(p=>!p)} style={{ display:"flex", alignItems:"center", gap:10, marginBottom: showRecurPanel ? 12 : 0, cursor:"pointer" }}>
                     <div style={{ flex:1, height:1, background:T.cardBorder }}/>
                     <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                      <Repeat size={11} color={T.textSub} strokeWidth={2}/>
+                      <DiamondPlus size={11} color={T.textSub} strokeWidth={2}/>
                       <p style={{ fontSize:11, fontWeight:800, color:T.textSub, letterSpacing:1.5, whiteSpace:"nowrap" }}>{L.recurringTx}</p>
                       {pendingRecurs.length > 0 && (
                         <div style={{ background:"#ef4444", borderRadius:99, minWidth:16, height:16, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 4px" }}>
@@ -197,7 +197,7 @@ export default function TabTransactions({ ctx }) {
 
               {showRecurPanel && <div className="card" style={{ padding:16, marginBottom:10, ...CS }}>
                 <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
-                  <Repeat size={15} color={themeAccent} strokeWidth={2}/> {L.addRecurring}
+                  <DiamondPlus size={15} color={themeAccent} strokeWidth={2}/> {L.addRecurring}
                 </p>
                 <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
                   <input className="inp" placeholder={L.recurNamePlaceholder} value={recurForm.description}
@@ -247,7 +247,7 @@ export default function TabTransactions({ ctx }) {
                 <div className="card" style={{ padding:"28px 20px", textAlign:"center", ...CSN }}>
                   <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                     <div style={{ width:60, height:60, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Repeat size={26} color={T.accentText} strokeWidth={1.5}/>
+                      <DiamondPlus size={26} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:13, color:T.textSub }}>{L.noRecurring}</p>
