@@ -15,7 +15,7 @@ import {
   CreditCard, ImagePlus, Image, ZoomIn, AlarmClock, BellRing, CheckCheck, Tag, Tags,
   Users, UserPlus, Equal, Receipt,
   HeartPulse, Rocket, Flag, Ban, DiamondPlus, SunMoon, Globe, PaintRoller, Grape, BadgeInfo, Cat, HandCoins,
-  Waves, Citrus, PaintbrushVertical, MessageCircle, CirclePlus
+  Waves, Citrus, PaintbrushVertical, MessageCircle, CirclePlus, Smile
 } from "./icons.jsx";
 import { formatRp, today, getWeek, getMonth, fmtDate, groupByDate, dateLabel, getCatLabel, haptic, parseRpInput, rpInputProps } from "./utils/helpers.js";
 import { darken, lighten, getLuminance, getContrastText, buildTheme } from "./utils/theme.js";
@@ -2259,7 +2259,7 @@ export default function App() {
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
               <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                 <div style={{ width:36, height:36, borderRadius:12, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <CirclePlus size={17} color={TP} strokeWidth={2.2}/>
+                  <Smile size={17} color={TP} strokeWidth={2.2}/>
                 </div>
                 <p style={{ fontSize:17, fontWeight:900, color:T.text }}>{L.editIncome}</p>
               </div>
