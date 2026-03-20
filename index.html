@@ -101,6 +101,25 @@
           document.getElementById('splash-bar').style.background='linear-gradient(90deg,'+color+' 0%,'+lighter+' 50%,'+color+' 100%)';
           document.getElementById('splash-bar').style.backgroundSize='200% 100%';
         } catch(e){}
+
+        // Set splash background based on app's own dark/light preference
+        try {
+          var followSystem = localStorage.getItem('gm_follow_system') !== '0';
+          var darkOverride = localStorage.getItem('gm_dark_override');
+          var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark;
+          if (followSystem) {
+            isDark = systemDark;
+          } else {
+            isDark = darkOverride === 'true' ? true : darkOverride === 'false' ? false : systemDark;
+          }
+          var splash = document.getElementById('splash');
+          if (splash) {
+            splash.style.background = isDark ? '#0a0a0a' : '#f5f4f0';
+          }
+          document.getElementById('splash-text').style.color = isDark ? '#ffffff' : '#1a1a1a';
+          document.getElementById('splash-sub').style.color = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+        } catch(e){}
       })();
 
       // Hide splash
