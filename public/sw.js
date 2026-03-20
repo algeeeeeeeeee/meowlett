@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meowlett-v1774011657';
+const CACHE_NAME = 'meowlett-v1774022028717';
 const ASSETS = ['/', '/index.html', '/meow.png', '/manifest.json'];
 
 self.addEventListener('install', e => {
@@ -27,7 +27,8 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request)
         .then(res => {
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, res.clone()));
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
           return res;
         })
         .catch(() => caches.match(e.request))
@@ -46,7 +47,8 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request)
         .then(res => {
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, res.clone()));
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
           return res;
         })
         .catch(() => caches.match('/index.html'))
