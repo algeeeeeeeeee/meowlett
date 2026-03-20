@@ -352,7 +352,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                 </div>
               )}
               <div style={{ display:"flex", gap:8, marginTop:4 }}>
-                <button onClick={save} style={{ flex:1, padding:"12px 0", borderRadius:14, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, border:"none", color:"white", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
+                <button onClick={() => { haptic("success"); save(); }} style={{ flex:1, padding:"12px 0", borderRadius:14, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, border:"none", color:"white", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
                   {lang==="en"?"Save":"Simpan"}
                 </button>
                 <button onClick={() => { setView("list"); setEditId(null); resetForm(); }}
@@ -673,7 +673,7 @@ function ReminderModal({ show, onClose, lang, L, T, themeAccent, themePrimary, n
             <div style={{width:46,height:26,borderRadius:99,background:reminderSmart?`linear-gradient(135deg,${themeAccent},${themePrimary})`:T.card2,border:reminderSmart?"none":`1.5px solid ${T.cardBorder}`,position:"relative",flexShrink:0}}><div style={{position:"absolute",width:20,height:20,borderRadius:"50%",background:"white",top:3,left:reminderSmart?"calc(100% - 23px)":3,transition:"left 0.2s cubic-bezier(0.34,1.1,0.64,1)",boxShadow:"0 2px 6px rgba(0,0,0,0.3)"}}/></div>
           </div>
           <div style={{margin:"14px 16px 0"}}><p style={{fontSize:11,fontWeight:700,color:T.textSub,marginBottom:8}}>{(L.reminderPreview||"PREVIEW").toUpperCase()}</p><div style={{background:T.card2,border:`1px solid ${T.cardBorder}`,borderRadius:16,padding:14}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><div style={{width:28,height:28,borderRadius:8,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🐱</div><p style={{fontSize:11,fontWeight:700,color:T.textSub}}>Meowlett</p><p style={{fontSize:11,color:T.textMuted,marginLeft:"auto"}}>{padT(reminderHour)}</p></div><p style={{fontSize:13,fontWeight:800,color:T.text,marginBottom:3}}>{L.reminderNotifTitle}</p><p style={{fontSize:12,color:T.textSub,lineHeight:1.4}}>{L.reminderNotifBody}</p></div></div>
-          <button onClick={()=>{if(notifEnabled)scheduleSmartReminder({hour:reminderHour,minute:0,days:reminderDays,smart:reminderSmart,lang,getTransactions:()=>transactions});showToast("ok:"+(lang==="en"?"Settings saved":"Pengaturan disimpan"));onClose();}}
+          <button onClick={()=>{haptic("success");if(notifEnabled)scheduleSmartReminder({hour:reminderHour,minute:0,days:reminderDays,smart:reminderSmart,lang,getTransactions:()=>transactions});showToast("ok:"+(lang==="en"?"Settings saved":"Pengaturan disimpan"));onClose();}}
             style={{display:"block",margin:"14px 16px 24px",width:"calc(100% - 32px)",padding:"14px 0",borderRadius:14,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,border:"none",color:"white",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>{lang==="en"?"Save Settings":"Simpan Pengaturan"}</button>
         </div>
       </div>
@@ -732,7 +732,7 @@ function CicilanModal({ show, onClose, cicilan, setCicilan, lang, L, T, themeAcc
                 <div style={{flex:1}}><p style={{fontSize:10,fontWeight:700,color:T.textSub,marginBottom:4}}>{L.cicilanDuration}</p><input className="inp" type="number" min="1" placeholder="24" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} style={{background:T.inp,border:`1.5px solid ${T.inpBorder}`,color:T.text}}/></div>
               </div>
               <div style={{display:"flex",gap:8,marginTop:4}}>
-                <button onClick={save} style={{flex:1,padding:"12px 0",borderRadius:14,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,border:"none",color:"white",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>{L.save}</button>
+                <button onClick={() => { haptic("success"); save(); }} style={{flex:1,padding:"12px 0",borderRadius:14,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,border:"none",color:"white",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>{L.save}</button>
                 <button onClick={()=>{setView("list");setEditId(null);}} style={{flex:0.5,padding:"12px 0",borderRadius:14,background:T.btnG,border:`1.5px solid ${T.btnGBorder}`,color:T.btnGText,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{L.cancel}</button>
               </div>
             </div>
@@ -1061,6 +1061,11 @@ export default function App() {
     try { if(localStorage.getItem("gm_onboarded")) return false; if(sessionStorage.getItem("gm_onboarded_session")) return false; return true; } catch { return false; }
   });
   const [onboardStep, setOnboardStep] = useState(0);
+  const [onboardVisible, setOnboardVisible] = useState(true);
+  const goToStep = (step) => {
+    setOnboardVisible(false);
+    setTimeout(() => { setOnboardStep(step); setOnboardVisible(true); }, 180);
+  };
   const [onboardName, setOnboardName] = useState("");
   const [onboardIncome, setOnboardIncome] = useState("");
   const [onboardIncomeDisplay, setOnboardIncomeDisplay] = useState("");
@@ -1839,10 +1844,28 @@ export default function App() {
         const limit = budgets[catKey] || 0;
         if (limit > 0 && !isRestoringRef.current) {
           const spent = updated.filter(t => t.category === catKey && t.date.startsWith(getMonth(form.date))).reduce((s,t) => s+t.amount, 0);
+          const catName = getCatLabel(categories[catKey], lang) || catKey;
+          const pct = Math.round(spent / limit * 100);
           if (spent >= limit) {
-            setTimeout(() => showToast("warn:Budget " + (getCatLabel(categories[catKey], lang) || catKey) + " sudah melewati limit!"), 400);
+            setTimeout(() => {
+              showToast(lang === "en"
+                ? `warn:${catName} budget exceeded! (${pct}% used)`
+                : `warn:Budget ${catName} terlampaui! (${pct}% terpakai)`);
+              if (notifEnabled) sendLocalNotification(
+                lang === "en" ? "Budget Alert" : "Peringatan Budget",
+                lang === "en" ? `${catName} budget is over the limit (${pct}%)` : `Budget ${catName} sudah melebihi batas (${pct}%)`
+              );
+            }, 400);
           } else if (spent >= limit * 0.8) {
-            setTimeout(() => showToast("warn:Budget " + (getCatLabel(categories[catKey], lang) || catKey) + " sudah " + Math.round(spent/limit*100) + "%!"), 400);
+            setTimeout(() => {
+              showToast(lang === "en"
+                ? `warn:${catName} budget at ${pct}% — almost full!`
+                : `warn:Budget ${catName} sudah ${pct}% — hampir habis!`);
+              if (notifEnabled && pct >= 90) sendLocalNotification(
+                lang === "en" ? "Budget Warning" : "Peringatan Budget",
+                lang === "en" ? `${catName} budget is at ${pct}%` : `Budget ${catName} sudah ${pct}%`
+              );
+            }, 400);
           }
         }
         return updated;
@@ -1952,6 +1975,8 @@ export default function App() {
               ))}
             </div>
 
+            {/* Step content with fade animation */}
+            <div style={{ opacity: onboardVisible ? 1 : 0, transform: onboardVisible ? "translateY(0)" : "translateY(10px)", transition: "opacity 0.18s ease, transform 0.18s ease" }}>
             {/* Step 0 — Welcome */}
             {onboardStep === 0 && (
               <div style={{ width:"100%", maxWidth:400 }}>
@@ -1971,7 +1996,7 @@ export default function App() {
                     );
                   })}
                 </div>
-                <button onClick={() => setOnboardStep(1)} style={{ width:"100%", padding:16, borderRadius:16, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:15, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white" }}>
+                <button onClick={() => { haptic(); goToStep(1); }} style={{ width:"100%", padding:16, borderRadius:16, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:15, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white" }}>
                   {lang==="en" ? "Start Setup →" : "Mulai Setup →"}
                 </button>
               </div>
@@ -1987,10 +2012,10 @@ export default function App() {
                   placeholder={lang==="en" ? "e.g. Virgie..." : "Contoh: Virgie..."} autoFocus
                   onFocus={() => { setTimeout(() => { if(window.visualViewport){ const kb=window.innerHeight-window.visualViewport.height-window.visualViewport.offsetTop; setKbHeight(kb>50?Math.round(kb):0); }},150); }}
                   style={{ width:"100%", background:T.card, border:`2px solid ${onboardName?themeAccent:T.cardBorder}`, borderRadius:14, padding:"14px 18px", color:T.text, fontSize:16, fontFamily:"inherit", outline:"none", marginBottom:12, transition:"border 0.2s", boxSizing:"border-box" }}/>
-                <button onClick={() => setOnboardStep(2)} style={{ width:"100%", padding:15, borderRadius:14, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:14, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", marginBottom:8 }}>
+                <button onClick={() => { haptic(); goToStep(2); }} style={{ width:"100%", padding:15, borderRadius:14, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:14, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", marginBottom:8 }}>
                   {lang==="en" ? "Next →" : "Lanjut →"}
                 </button>
-                <button onClick={() => setOnboardStep(2)} style={{ width:"100%", padding:10, borderRadius:12, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:13, background:"none", color:T.textSub }}>
+                <button onClick={() => { haptic("light"); goToStep(2); }} style={{ width:"100%", padding:10, borderRadius:12, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:13, background:"none", color:T.textSub }}>
                   {lang==="en" ? "Skip" : "Lewati"}
                 </button>
               </div>
@@ -2012,10 +2037,10 @@ export default function App() {
                 </div>
                 {onboardIncome && <p style={{ fontSize:12, color:themeAccent, fontWeight:700, marginBottom:8, paddingLeft:2 }}>= {formatRp(Number(onboardIncome))}</p>}
                 {!onboardIncome && <div style={{ height:8 }}/>}
-                <button onClick={() => setOnboardStep(3)} style={{ width:"100%", padding:15, borderRadius:14, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:14, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", marginBottom:8 }}>
+                <button onClick={() => { haptic(); goToStep(3); }} style={{ width:"100%", padding:15, borderRadius:14, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:14, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", marginBottom:8 }}>
                   {lang==="en" ? "Next →" : "Lanjut →"}
                 </button>
-                <button onClick={() => setOnboardStep(1)} style={{ width:"100%", padding:10, borderRadius:12, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:13, background:"none", color:T.textSub }}>
+                <button onClick={() => { haptic("light"); goToStep(1); }} style={{ width:"100%", padding:10, borderRadius:12, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:13, background:"none", color:T.textSub }}>
                   {lang==="en" ? "← Back" : "← Kembali"}
                 </button>
               </div>
@@ -2097,16 +2122,17 @@ export default function App() {
                   </div>
                 )}
 
-                <button onClick={finishOnboarding} style={{ width:"100%", padding:15, borderRadius:14, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:14, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", marginBottom:8, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                <button onClick={() => { haptic("success"); finishOnboarding(); }} style={{ width:"100%", padding:15, borderRadius:14, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:14, fontWeight:800, background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", marginBottom:8, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                   {lang==="en" ? "Done, Let's Go!" : "Selesai, Mulai!"}
                 </button>
-                <button onClick={() => setOnboardStep(2)} style={{ width:"100%", padding:10, borderRadius:12, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:13, background:"none", color:T.textSub }}>
+                <button onClick={() => { haptic("light"); goToStep(2); }} style={{ width:"100%", padding:10, borderRadius:12, border:"none", cursor:"pointer", fontFamily:"inherit", fontSize:13, background:"none", color:T.textSub }}>
                   {lang==="en" ? "← Back" : "← Kembali"}
                 </button>
               </div>
             )}
 
+            </div>{/* end step fade wrapper */}
           </div>
         </div>
       )}
@@ -2142,7 +2168,7 @@ export default function App() {
             <p style={{ fontSize:13,fontWeight:800,color:"white" }}>Pasang ke Home Screen</p>
             <p style={{ fontSize:11,color:"rgba(255,255,255,0.7)" }}>Akses lebih cepat, bisa offline!</p>
           </div>
-          <button onClick={() => { installPrompt && installPrompt.prompt(); setShowInstallBanner(false); }} style={{ background:"white",color:themePrimary,border:"none",borderRadius:12,padding:"8px 14px",fontSize:12,fontWeight:800,cursor:"pointer" }}>Pasang</button>
+          <button onClick={() => { haptic(); installPrompt && installPrompt.prompt(); setShowInstallBanner(false); }} style={{ background:"white",color:themePrimary,border:"none",borderRadius:12,padding:"8px 14px",fontSize:12,fontWeight:800,cursor:"pointer" }}>Pasang</button>
           <button onClick={() => setShowInstallBanner(false)} style={{ background:"rgba(255,255,255,0.2)",border:"none",borderRadius:10,padding:8,cursor:"pointer",display:"flex" }}><X size={14} color="white"/></button>
         </div>
       )}
@@ -2812,7 +2838,7 @@ export default function App() {
                   <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.savingsGoal}</p>
                 </div>
                 {savingsGoals.length > 0 && (
-                  <button onClick={() => { setEditingGoal("new"); setGoalForm({ label:"", target:"", targetDisplay:"", saved:"", savedDisplay:"", color:"#60a5fa", icon:"piggy" }); }}
+                  <button onClick={() => { haptic(); setEditingGoal("new"); setGoalForm({ label:"", target:"", targetDisplay:"", saved:"", savedDisplay:"", color:"#60a5fa", icon:"piggy" }); }}
                     style={{ background:"none", border:"none", fontSize:12, color:TP, fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", gap:3 }}>
                     <Plus size={13} strokeWidth={2.5}/> {lang==="en"?"Add":"+ Tambah"}
                   </button>
@@ -3146,20 +3172,20 @@ export default function App() {
                   <div style={{ display:"flex", flexDirection:"column", gap:6, marginBottom: showRecurPanel ? 12 : 0 }}>
                     {/* Sub-header Cicilan */}
                     <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:16 }}>
-                      <div onClick={() => setShowCicilanModal(true)} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
+                      <div onClick={() => { haptic(); setShowCicilanModal(true); }} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
                         <CreditCard size={11} color={T.accentText} strokeWidth={2}/>
                         <p style={{ fontSize:11, fontWeight:800, color:T.accentText, letterSpacing:1.5 }}>{L.cicilan.toUpperCase()}</p>
                         {cicilan.length > 0 && <span style={{ background:themeAccent, borderRadius:99, minWidth:14, height:14, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 3px", fontSize:9, fontWeight:900, color:"white" }}>{cicilan.length}</span>}
                       </div>
                       <div style={{ width:1, height:14, background:T.cardBorder }}/>
-                      <div onClick={() => setShowSplitBills(true)} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
+                      <div onClick={() => { haptic(); setShowSplitBills(true); }} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
                         <Users size={11} color={T.accentText} strokeWidth={2}/>
                         <p style={{ fontSize:11, fontWeight:800, color:T.accentText, letterSpacing:1.5 }}>{lang==="en"?"SPLIT BILLS":"PATUNGAN"}</p>
                         {splitBills.filter(s=>!s.settled).length > 0 && <span style={{ background:"#f87171", borderRadius:99, minWidth:14, height:14, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 3px", fontSize:9, fontWeight:900, color:"white" }}>{splitBills.filter(s=>!s.settled).length}</span>}
                       </div>
                     </div>
                     {/* Transaksi Rutin - center */}
-                    <div onClick={() => setShowRecurPanel(p=>!p)} style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }}>
+                    <div onClick={() => { haptic("light"); setShowRecurPanel(p=>!p); }} style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }}>
                       <div style={{ flex:1, height:1, background:T.cardBorder }}/>
                       <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                         <Repeat size={11} color={T.textSub} strokeWidth={2}/>
@@ -3281,7 +3307,7 @@ export default function App() {
             {/* ── RECURRING INCOME collapsible ── */}
             <div style={{ marginTop:4, marginBottom:12 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom: showRecurIncomePanel ? 12 : 0 }}>
-                <div onClick={() => setShowRecurIncomePanel(p=>!p)} style={{ display:"flex", alignItems:"center", gap:6, cursor:"pointer", flex:1 }}>
+                <div onClick={() => { haptic("light"); setShowRecurIncomePanel(p=>!p); }} style={{ display:"flex", alignItems:"center", gap:6, cursor:"pointer", flex:1 }}>
                   <div style={{ flex:1, height:1, background:"#4ade8033" }}/>
                   <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                     <TrendingUp size={11} color="#4ade80" strokeWidth={2}/>
@@ -3860,7 +3886,7 @@ export default function App() {
                   </div>
                   <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.wishlistTitle}</p>
                 </div>
-                <button onClick={() => setShowWishlistForm(true)}
+                <button onClick={() => { haptic(); setShowWishlistForm(true); }}
                   style={{ background:"none", border:"none", fontSize:12, color:"#f472b6", fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", gap:3 }}>
                   <Plus size={13} strokeWidth={2.5}/> {L.add}
                 </button>
@@ -3903,7 +3929,7 @@ export default function App() {
                     onKeyDown={e => { if(e.key==="Enter" && wishlistInput.trim()){ setDateWishlist(prev => [...prev, { id:Date.now(), label:wishlistInput.trim(), done:false }]); setWishlistInput(""); setShowWishlistForm(false); showToast(L.toastWishlist); } }}
                     style={{ background:T.inp, border:"1.5px solid #f9a8d4", color:T.text, marginBottom:12 }}/>
                   <button className="btn-p" style={{ width:"100%", background:"#f472b6", fontFamily:"inherit" }}
-                    onClick={() => { if(!wishlistInput.trim()) return; setDateWishlist(prev => [...prev, { id:Date.now(), label:wishlistInput.trim(), done:false }]); setWishlistInput(""); setShowWishlistForm(false); showToast(L.toastWishlist); }}>
+                    onClick={() => { if(!wishlistInput.trim()) return; haptic("success"); setDateWishlist(prev => [...prev, { id:Date.now(), label:wishlistInput.trim(), done:false }]); setWishlistInput(""); setShowWishlistForm(false); showToast(L.toastWishlist); }}>
                     {L.save}
                   </button>
                 </div>
@@ -4085,7 +4111,7 @@ export default function App() {
                         onChange={e => setTempName(e.target.value)}
                         onKeyDown={e => { if(e.key==="Enter"){ setUserName(tempName); setShowNameEdit(false); } }}
                         style={{ fontSize:16, fontWeight:800, color:T.text, background:"transparent", border:"none", borderBottom:`2px solid ${themeAccent}`, borderRadius:0, padding:"2px 0", width:130, outline:"none" }}/>
-                      <button onClick={() => { setUserName(tempName); setShowNameEdit(false); showToast("ok:"+L.nameSaved); }}
+                      <button onClick={() => { haptic("success"); setUserName(tempName); setShowNameEdit(false); showToast("ok:"+L.nameSaved); }}
                         style={{ background:themePrimary, border:"none", borderRadius:8, padding:"4px 10px", color:"white", fontSize:12, fontWeight:700, cursor:"pointer" }}>OK</button>
                     </div>
                   ) : (
