@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" style="background:#0a0a0a">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0" />
@@ -13,7 +13,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/meow.png" />
     <link rel="apple-touch-startup-image" href="/meow.png" />
     <link rel="icon" type="image/png" href="/meow.png" />
-    <link rel="preload" as="image" href="/meow.png" />
     <link rel="manifest" href="/manifest.json" />
     <title>Meowlett</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,23 +30,17 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        background: #0a0a0a;
+        /* background set by JS below based on saved dark mode preference */
       }
-      @media (prefers-color-scheme: light) { html, body { background: #f5f4f0 !important; } }
       #root { width: 100%; min-height: 100dvh; overflow-x: hidden; position: relative; }
       #splash {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
         z-index: 99999;
-        background: #0a0a0a;
         transition: opacity 0.4s ease;
         will-change: opacity;
         overflow: hidden;
-      }
-      @media (prefers-color-scheme: light) {
-        #splash { background: #f5f4f0; }
-        #splash-text { color: #1a1a1a !important; }
-        #splash-sub { color: #888 !important; }
+        /* bg set by JS */
       }
       #splash-inner {
         position: absolute;
@@ -57,16 +50,37 @@
       }
       #splash-logo { width:72px; height:72px; border-radius:20px; overflow:hidden; flex-shrink:0; }
       #splash-logo img { width:72px; height:72px; object-fit:cover; display:block; }
-      #splash-text { font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif; font-size:22px; font-weight:700; color:#fff; letter-spacing:-0.5px; }
-      #splash-sub { font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif; font-size:13px; color:rgba(255,255,255,0.4); margin-top:-6px; }
-      #splash-bar-wrap { width:160px; height:4px; background:rgba(255,255,255,0.12); border-radius:99px; overflow:hidden; margin-top:8px; }
-      @media (prefers-color-scheme: light) { #splash-bar-wrap { background:rgba(0,0,0,0.1); } }
+      #splash-text { font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif; font-size:22px; font-weight:700; letter-spacing:-0.5px; }
+      #splash-sub { font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif; font-size:13px; margin-top:-6px; }
+      #splash-bar-wrap { width:160px; height:4px; border-radius:99px; overflow:hidden; margin-top:8px; }
       @keyframes splash-bar { 0%{width:0%} 100%{width:100%} }
       @keyframes splash-shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-      #splash-bar { height:100%; width:0%; border-radius:99px; background:var(--splash-color,#fb7185);
+      #splash-bar { height:100%; width:0%; border-radius:99px;
         background-size:200% 100%;
         animation: splash-bar 2.7s cubic-bezier(0.4,0,0.2,1) forwards, splash-shimmer 1.2s linear infinite; }
     </style>
+    <script>
+      // Apply dark/light mode to body + splash ASAP (before paint)
+      (function(){
+        var isDark;
+        try {
+          var ov = localStorage.getItem('gm_dark_override');
+          if (ov === 'dark') isDark = true;
+          else if (ov === 'light') isDark = false;
+          else isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        } catch(e) {
+          isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        var bgDark  = '#0a0a0a', bgLight = '#f5f4f0';
+        var bg = isDark ? bgDark : bgLight;
+        document.documentElement.style.background = bg;
+        document.body && (document.body.style.background = bg);
+
+        // Store for splash script
+        window.__splashDark = isDark;
+      })();
+    </script>
   </head>
   <body>
     <div id="splash">
@@ -90,47 +104,49 @@
       centerSplash();
       window.addEventListener('resize', centerSplash);
 
-      // Theme color
+      // Apply splash colors based on dark/light mode (reads __splashDark set above)
       (function(){
-        var presets={green:'#4ade80',blue:'#60a5fa',purple:'#c084fc',rose:'#fb7185',orange:'#fb923c',teal:'#2dd4bf'};
-        try {
-          var preset=localStorage.getItem('gm_theme_preset')||'rose';
-          var color=preset==='custom'?localStorage.getItem('gm_custom_primary')||'#4ade80':presets[preset]||'#fb7185';
-          document.documentElement.style.setProperty('--splash-color',color);
-          var lighter=color+'99';
-          document.getElementById('splash-bar').style.background='linear-gradient(90deg,'+color+' 0%,'+lighter+' 50%,'+color+' 100%)';
-          document.getElementById('splash-bar').style.backgroundSize='200% 100%';
-        } catch(e){}
+        var isDark = window.__splashDark !== undefined
+          ? window.__splashDark
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-        // Set splash background based on app's own dark/light preference
+        var splash  = document.getElementById('splash');
+        var text    = document.getElementById('splash-text');
+        var sub     = document.getElementById('splash-sub');
+        var barWrap = document.getElementById('splash-bar-wrap');
+
+        if (isDark) {
+          splash.style.background  = '#0a0a0a';
+          text.style.color         = '#ffffff';
+          sub.style.color          = 'rgba(255,255,255,0.4)';
+          barWrap.style.background = 'rgba(255,255,255,0.12)';
+        } else {
+          splash.style.background  = '#f5f4f0';
+          text.style.color         = '#1a1a1a';
+          sub.style.color          = '#888888';
+          barWrap.style.background = 'rgba(0,0,0,0.1)';
+        }
+
+        // Accent color from saved theme
+        var presets = {green:'#4ade80',blue:'#60a5fa',purple:'#c084fc',rose:'#fb7185',orange:'#fb923c',teal:'#2dd4bf'};
         try {
-          var followSystem = localStorage.getItem('gm_follow_system') !== '0';
-          var darkOverride = localStorage.getItem('gm_dark_override');
-          var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var isDark;
-          if (followSystem) {
-            isDark = systemDark;
-          } else {
-            isDark = darkOverride === 'true' ? true : darkOverride === 'false' ? false : systemDark;
-          }
-          var splash = document.getElementById('splash');
-          if (splash) {
-            splash.style.background = isDark ? '#0a0a0a' : '#f5f4f0';
-          }
-          // Also set html/body so no dark leak behind splash
-          document.documentElement.style.background = isDark ? '#0a0a0a' : '#f5f4f0';
-          document.body.style.background = isDark ? '#0a0a0a' : '#f5f4f0';
-          document.getElementById('splash-text').style.color = isDark ? '#ffffff' : '#1a1a1a';
-          document.getElementById('splash-sub').style.color = isDark ? 'rgba(255,255,255,0.4)' : '#888';
-        } catch(e){}
+          var preset = localStorage.getItem('gm_theme_preset') || 'rose';
+          var color  = preset === 'custom'
+            ? (localStorage.getItem('gm_custom_primary') || '#4ade80')
+            : (presets[preset] || '#fb7185');
+          var lighter = color + '99';
+          var bar = document.getElementById('splash-bar');
+          bar.style.background = 'linear-gradient(90deg,' + color + ' 0%,' + lighter + ' 50%,' + color + ' 100%)';
+          bar.style.backgroundSize = '200% 100%';
+        } catch(e) {}
       })();
 
       // Hide splash
-      window.__hideSplash=function(){
-        var s=document.getElementById('splash');
-        var r=document.getElementById('root');
-        if(r){r.style.visibility='visible';r.style.opacity='1';}
-        if(s){s.style.opacity='0';setTimeout(function(){s.remove();document.body.style.overflow='';},400);}
+      window.__hideSplash = function(){
+        var s = document.getElementById('splash');
+        var r = document.getElementById('root');
+        if (r) { r.style.visibility = 'visible'; r.style.opacity = '1'; }
+        if (s) { s.style.opacity = '0'; setTimeout(function(){ s.remove(); document.body.style.overflow = ''; }, 400); }
       };
     </script>
     <div id="root" style="visibility:hidden;opacity:0;transition:opacity 0.3s ease;"></div>
