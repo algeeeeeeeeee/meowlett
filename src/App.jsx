@@ -294,7 +294,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 20px 14px", borderBottom:`1px solid ${T.cardBorder}`, flexShrink:0 }}>
           <div style={{ display:"flex", alignItems:"center", gap:9 }}>
             <Users size={18} color={themeAccent} strokeWidth={2}/>
-            <p style={{ fontSize:16, fontWeight:900, color:T.text }}>Split Bills</p>
+            <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{lang==="en"?"Split Bills":"Split Bills"}</p>
           </div>
           <div style={{ display:"flex", gap:8, alignItems:"center" }}>
             {view==="list" && (
@@ -316,7 +316,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
           {view==="form" && (
             <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
               <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:4 }}>
-                {editId ? (lang==="en"?"Edit Split":"Edit Split") : (lang==="en"?"New Split Bill":"Split Bill Baru")}
+                {editId ? (lang==="en"?"Edit Split":"Edit Split Bill") : (lang==="en"?"New Split Bill":"Split Bill Baru")}
               </p>
               <input className="inp" placeholder={lang==="en"?"Title (e.g. Dinner at X)":"Judul (mis. Makan di X)"}
                 value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))}
@@ -336,7 +336,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
               </div>
               <div>
                 <p style={{ fontSize:10, fontWeight:700, color:T.textSub, marginBottom:4 }}>
-                  {lang==="en"?"Who paid?":"Siapa yang bayar dulu?"}
+                  {lang==="en"?"Who paid?":"Siapa yang bayar duluan?"}
                 </p>
                 <input className="inp" placeholder={lang==="en"?"Name of payer":"Nama yang bayar"}
                   value={form.paidBy} onChange={e=>setForm(f=>({...f,paidBy:e.target.value}))}
@@ -468,7 +468,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                     {lang==="en"?"No split bills yet":"Belum ada split bill"}
                   </p>
                   <p style={{ fontSize:12, color:T.textSub }}>
-                    {lang==="en"?"Split bills with friends easily":"Bagi tagihan bareng temen dengan mudah"}
+                    {lang==="en"?"Split bills with friends easily":"Bagi tagihan bareng teman dengan mudah"}
                   </p>
                 </div>
               ) : (
@@ -2301,7 +2301,7 @@ export default function App() {
           zIndex:50,
           background: dark ? "rgba(10,10,10,0.85)" : `${T.bg}f0`,
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          borderBottom: `1.5px solid ${dark?"rgba(255,255,255,0.10)":"rgba(0,0,0,0.10)"}`,
+          borderBottom: `1.5px solid ${themeAccent}55`,
           paddingTop:"calc(env(safe-area-inset-top) + 10px)",
           paddingBottom:10, paddingLeft:16, paddingRight:16,
           boxSizing:"border-box",
@@ -2349,7 +2349,7 @@ export default function App() {
             position:"fixed", top:0, left:0, right:0, zIndex:50,
             background: dark ? "rgba(10,10,10,0.85)" : `${T.bg}f0`,
             backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)",
-            borderBottom: `1.5px solid ${dark?"rgba(255,255,255,0.10)":"rgba(0,0,0,0.10)"}`,
+            borderBottom: `1.5px solid ${themeAccent}55`,
             paddingTop:"calc(env(safe-area-inset-top) + 10px)",
             paddingBottom:10, paddingLeft:16, paddingRight:16,
             boxSizing:"border-box",
