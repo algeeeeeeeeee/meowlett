@@ -845,6 +845,8 @@ export default function App() {
   const themeAccent  = themePresetId === "custom" ? customAccent  : activePreset.accent;
   const T = buildTheme(themePrimary, themeAccent, dark);
   const TP  = dark ? lighten(themePrimary,0.45) : themePrimary;
+  const hex2rgb = h => { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return r+","+g+","+b; };
+  const headerShadow = "0 4px 20px rgba("+hex2rgb(dark?themePrimary:themeAccent)+",0.35)";
   const CS  = { background:T.card, border:`1px solid ${T.cardBorder}`, boxShadow:`0 1px 4px ${T.cardShadow}` };
   const CSN = { background:T.card, border:`1px solid ${T.cardBorder}` };
   const IBN = { background:"none", border:"none", cursor:"pointer" };
@@ -2299,9 +2301,9 @@ export default function App() {
         {tab === "dashboard" && <div ref={headerRef} style={{
           position:"fixed", top:0, left:0, right:0,
           zIndex:50,
-          background: dark ? "rgba(10,10,10,0.85)" : `${T.bg}f0`,
+          background: dark ? "rgba(10,10,10,0.65)" : `${T.bg}99`,
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          borderBottom: `1.5px solid ${themeAccent}55`,
+          boxShadow: headerShadow,
           paddingTop:"calc(env(safe-area-inset-top) + 10px)",
           paddingBottom:10, paddingLeft:16, paddingRight:16,
           boxSizing:"border-box",
@@ -2347,9 +2349,9 @@ export default function App() {
         {tab !== "dashboard" && (
           <div ref={sharedHeaderRef} style={{
             position:"fixed", top:0, left:0, right:0, zIndex:50,
-            background: dark ? "rgba(10,10,10,0.85)" : `${T.bg}f0`,
+            background: dark ? "rgba(10,10,10,0.65)" : `${T.bg}99`,
             backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)",
-            borderBottom: `1.5px solid ${themeAccent}55`,
+            boxShadow: headerShadow,
             paddingTop:"calc(env(safe-area-inset-top) + 10px)",
             paddingBottom:10, paddingLeft:16, paddingRight:16,
             boxSizing:"border-box",
