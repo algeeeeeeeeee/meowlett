@@ -12,7 +12,7 @@ import {
   CircleDollarSign, AlertTriangle, CheckCircle, Search, Inbox,
   ArrowRight, Banknote, Download, Bell, BellOff, X, Camera, Settings,
   WifiOff, Repeat, AlertCircle, Sparkles, Flame, Wind, Zap, Smartphone, Laptop, ChevronDown, ChevronRight, Target, Save, Upload, Share2, Calculator2,
-  CreditCard, ImagePlus, Image, ZoomIn, AlarmClock, BellRing, CheckCheck,
+  CreditCard, ImagePlus, Image, ZoomIn, AlarmClock, BellRing, CheckCheck, Tag, Tags,
   Users, UserPlus, Equal, Receipt
 } from "./icons.jsx";
 import { formatRp, today, getWeek, getMonth, fmtDate, groupByDate, dateLabel, getCatLabel, haptic, parseRpInput, rpInputProps } from "./utils/helpers.js";
