@@ -223,7 +223,7 @@ const STYLES = `
 const THEME_LABELS = { green:"themeGreen", blue:"themeBlue", purple:"themePurple", rose:"themeRose", orange:"themeOrange", teal:"themeTeal" };
 
 // ── Split Bills Modal ─────────────────────────────────────────────────────────
-function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAccent, themePrimary, dark, lang, formatRp, parseRpInput, haptic, showToast }) {
+function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAccent, themePrimary, dark, lang, L, formatRp, parseRpInput, haptic, showToast }) {
   const [view, setView] = React.useState("list"); // list | form | detail
   const [editId, setEditId] = React.useState(null);
   const [detail, setDetail] = React.useState(null);
@@ -236,7 +236,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
   const save = () => {
     if (!form.title || !form.total) return;
     const names = form.members.split(",").map(s=>s.trim()).filter(Boolean);
-    if (names.length < 2) { showToast("err:"+(lang==="en"?"Min 2 members":"Min 2 orang")); return; }
+    if (names.length < 2) { showToast("err:"+(L.splitMinMembers)); return; }
     const perPerson = Math.round(Number(form.total) / names.length);
     const item = {
       id: editId || Date.now(),
@@ -256,7 +256,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
     } else {
       setSplitBills(p => [...p, item]);
     }
-    showToast("ok:"+(lang==="en"?"Split bill saved":"Split bill disimpan"));
+    showToast("ok:"+L.splitSaved.replace("ok:",""));
     haptic("success");
     resetForm(); setEditId(null); setView("list");
   };
@@ -309,7 +309,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 20px 14px", borderBottom:`1px solid ${T.cardBorder}`, flexShrink:0 }}>
           <div style={{ display:"flex", alignItems:"center", gap:9 }}>
             <Users size={18} color={themeAccent} strokeWidth={2}/>
-            <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{lang==="en"?"Split Bills":"Patungan"}</p>
+            <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{L.splitBills}</p>
           </div>
           <div style={{ display:"flex", gap:8, alignItems:"center" }}>
             {view==="list" && (
@@ -331,7 +331,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
           {view==="form" && (
             <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
               <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:4 }}>
-                {editId ? (lang==="en"?"Edit Split":"Edit Split Bill") : (lang==="en"?"New Split Bill":"Split Bill Baru")}
+                {editId ? (L.splitEdit) : (L.splitNew)}
               </p>
               <input className="inp" placeholder={lang==="en"?"Title (e.g. Dinner at X)":"Judul (mis. Makan di X)"}
                 value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))}
@@ -362,7 +362,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                   <Equal size={14} color={themeAccent} strokeWidth={2.5}/>
                   <p style={{ fontSize:13, fontWeight:800, color:T.text }}>
                     {formatRp(Math.round(Number(form.total) / form.members.split(",").filter(s=>s.trim()).length))}
-                    <span style={{ fontSize:11, fontWeight:600, color:T.textSub }}> / {lang==="en"?"person":"orang"}</span>
+                    <span style={{ fontSize:11, fontWeight:600, color:T.textSub }}> / {L.splitPerson}</span>
                   </p>
                 </div>
               )}
@@ -389,7 +389,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                 <div style={{ background:`linear-gradient(135deg,${themePrimary},${themeAccent}88)`, borderRadius:18, padding:"18px 20px 20px", marginBottom:14 }}>
                   <p style={{ fontSize:18, fontWeight:900, color:"white", marginBottom:4 }}>{bill.title}</p>
                   <p style={{ fontSize:13, color:"rgba(255,255,255,0.75)", marginBottom:12 }}>
-                    {bill.date} · {bill.members.length} {lang==="en"?"people":"orang"}
+                    {bill.date} · {bill.members.length} {L.splitPeople}
                   </p>
                   <div style={{ display:"flex", gap:20 }}>
                     <div>
@@ -414,8 +414,8 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
 
                 {/* Paid by info */}
                 <p style={{ fontSize:11, fontWeight:700, color:T.textSub, marginBottom:10 }}>
-                  {lang==="en"?"Paid by":"Dibayar oleh"}: <span style={{ color:themeAccent }}>{bill.paidBy}</span>
-                  {" — "}{lang==="en"?"tap to mark who has paid back":"tap untuk tandai yang sudah bayar balik"}
+                  {L.splitPaidBy}: <span style={{ color:themeAccent }}>{bill.paidBy}</span>
+                  {" — "}{L.splitTapMark}
                 </p>
 
                 {/* Members list */}
@@ -437,10 +437,10 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                           <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{m.name}</p>
                           <p style={{ fontSize:11, color:T.textSub, marginTop:1 }}>
                             {isPayer
-                              ? (lang==="en"?"Paid the bill 💳":"Yang bayar duluan 💳")
+                              ? (L.splitPaidBill)
                               : isDone
-                                ? (lang==="en"?"Has paid back ✓":"Sudah bayar balik ✓")
-                                : (lang==="en"?"Hasn't paid back":"Belum bayar balik")
+                                ? (L.splitHasPaid)
+                                : (L.splitNotPaid)
                             }
                           </p>
                         </div>
@@ -480,10 +480,10 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                     <Users size={32} color={themeAccent} strokeWidth={1.5}/>
                   </div>
                   <p style={{ fontSize:15, fontWeight:800, color:T.text, marginBottom:6 }}>
-                    {lang==="en"?"No split bills yet":"Belum ada split bill"}
+                    {L.splitEmpty}
                   </p>
                   <p style={{ fontSize:12, color:T.textSub }}>
-                    {lang==="en"?"Split bills with friends easily":"Bagi tagihan bareng teman dengan mudah"}
+                    {L.splitBillsDesc}
                   </p>
                 </div>
               ) : (
@@ -491,7 +491,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                   {active.length > 0 && (
                     <>
                       <p style={{ fontSize:11, fontWeight:800, color:T.textSub, letterSpacing:1, marginBottom:8 }}>
-                        {lang==="en"?"ACTIVE":"AKTIF"}
+                        {L.splitActive}
                       </p>
                       <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:16 }}>
                         {active.map(bill => {
@@ -504,7 +504,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                                 <div>
                                   <p style={{ fontSize:14, fontWeight:800, color:T.text, marginBottom:2 }}>{bill.title}</p>
                                   <p style={{ fontSize:11, color:T.textSub }}>
-                                    {bill.members.length} {lang==="en"?"people":"orang"} · {formatRp(Math.round(bill.total/bill.members.length))}/{lang==="en"?"person":"org"}
+                                    {bill.members.length} {L.splitPeople} · {formatRp(Math.round(bill.total/bill.members.length))}/{L.splitOrg}
                                   </p>
                                 </div>
                                 <p style={{ fontSize:15, fontWeight:900, color:T.text }}>{formatRp(bill.total)}</p>
@@ -513,7 +513,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                                 <div style={{ height:"100%", width:`${pct}%`, background:`linear-gradient(90deg,${themeAccent},${themePrimary})`, borderRadius:99 }}/>
                               </div>
                               <p style={{ fontSize:10, color:T.textSub, marginTop:4, fontWeight:600 }}>
-                                {paidCount}/{bill.members.length} {lang==="en"?"paid back":"sudah bayar balik"} ({pct}%)
+                                {paidCount}/{bill.members.length} {L.splitPaidBack} ({pct}%)
                               </p>
                             </div>
                           );
@@ -524,7 +524,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                   {done.length > 0 && (
                     <>
                       <p style={{ fontSize:11, fontWeight:800, color:T.textSub, letterSpacing:1, marginBottom:8 }}>
-                        {lang==="en"?"SETTLED":"LUNAS"}
+                        {L.splitSettled}
                       </p>
                       <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                         {done.map(bill => (
@@ -534,7 +534,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
                               <div>
                                 <p style={{ fontSize:13, fontWeight:800, color:T.text }}>{bill.title}</p>
                                 <p style={{ fontSize:11, color:T.textSub }}>
-                                  ✓ {lang==="en"?"All settled":"Semua lunas"} · {bill.date}
+                                  ✓ {L.splitAllSettled} · {bill.date}
                                 </p>
                               </div>
                               <p style={{ fontSize:14, fontWeight:800, color:themeAccent }}>{formatRp(bill.total)}</p>
@@ -666,7 +666,7 @@ function ReminderModal({ show, onClose, lang, L, T, themeAccent, themePrimary, n
             <div><p style={{fontSize:14,fontWeight:800,color:T.text}}>{L.reminderTitle}</p><p style={{fontSize:12,color:T.textSub,marginTop:3,lineHeight:1.5}}>{L.reminderDesc}</p></div>
           </div>
           <div onClick={()=>handleNotification()} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 20px",borderBottom:`1px solid ${T.cardBorder}`,cursor:"pointer"}}>
-            <div style={{display:"flex",alignItems:"center",gap:12}}><div style={{width:38,height:38,borderRadius:12,background:T.card2,display:"flex",alignItems:"center",justifyContent:"center"}}><Bell size={18} color={notifEnabled?themeAccent:T.textSub} strokeWidth={2}/></div><div><p style={{fontSize:14,fontWeight:700,color:T.text}}>{lang==="en"?"Push Notifications":"Notifikasi"}</p><p style={{fontSize:11,color:T.textSub,marginTop:1}}>{notifEnabled?L.notifActive:L.notifOff}</p></div></div>
+            <div style={{display:"flex",alignItems:"center",gap:12}}><div style={{width:38,height:38,borderRadius:12,background:T.card2,display:"flex",alignItems:"center",justifyContent:"center"}}><Bell size={18} color={notifEnabled?themeAccent:T.textSub} strokeWidth={2}/></div><div><p style={{fontSize:14,fontWeight:700,color:T.text}}>{L.pushNotifications}</p><p style={{fontSize:11,color:T.textSub,marginTop:1}}>{notifEnabled?L.notifActive:L.notifOff}</p></div></div>
             <div style={{width:46,height:26,borderRadius:99,background:notifEnabled?`linear-gradient(135deg,${themeAccent},${themePrimary})`:T.card2,border:notifEnabled?"none":`1.5px solid ${T.cardBorder}`,position:"relative",flexShrink:0}}><div style={{position:"absolute",width:20,height:20,borderRadius:"50%",background:"white",top:3,left:notifEnabled?"calc(100% - 23px)":3,transition:"left 0.2s cubic-bezier(0.34,1.1,0.64,1)",boxShadow:"0 2px 6px rgba(0,0,0,0.3)"}}/></div>
           </div>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 20px",borderBottom:`1px solid ${T.cardBorder}`}}>
@@ -688,8 +688,8 @@ function ReminderModal({ show, onClose, lang, L, T, themeAccent, themePrimary, n
             <div style={{width:46,height:26,borderRadius:99,background:reminderSmart?`linear-gradient(135deg,${themeAccent},${themePrimary})`:T.card2,border:reminderSmart?"none":`1.5px solid ${T.cardBorder}`,position:"relative",flexShrink:0}}><div style={{position:"absolute",width:20,height:20,borderRadius:"50%",background:"white",top:3,left:reminderSmart?"calc(100% - 23px)":3,transition:"left 0.2s cubic-bezier(0.34,1.1,0.64,1)",boxShadow:"0 2px 6px rgba(0,0,0,0.3)"}}/></div>
           </div>
           <div style={{margin:"14px 16px 0"}}><p style={{fontSize:11,fontWeight:700,color:T.textSub,marginBottom:8}}>{(L.reminderPreview||"PREVIEW").toUpperCase()}</p><div style={{background:T.card2,border:`1px solid ${T.cardBorder}`,borderRadius:16,padding:14}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><div style={{width:28,height:28,borderRadius:8,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🐱</div><p style={{fontSize:11,fontWeight:700,color:T.textSub}}>Meowlett</p><p style={{fontSize:11,color:T.textMuted,marginLeft:"auto"}}>{padT(reminderHour)}</p></div><p style={{fontSize:13,fontWeight:800,color:T.text,marginBottom:3}}>{L.reminderNotifTitle}</p><p style={{fontSize:12,color:T.textSub,lineHeight:1.4}}>{L.reminderNotifBody}</p></div></div>
-          <button onClick={()=>{haptic("success");if(notifEnabled)scheduleSmartReminder({hour:reminderHour,minute:0,days:reminderDays,smart:reminderSmart,lang,getTransactions:()=>transactions});showToast("ok:"+(lang==="en"?"Settings saved":"Pengaturan disimpan"));onClose();}}
-            style={{display:"block",margin:"14px 16px 24px",width:"calc(100% - 32px)",padding:"14px 0",borderRadius:14,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,border:"none",color:"white",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>{lang==="en"?"Save Settings":"Simpan Pengaturan"}</button>
+          <button onClick={()=>{haptic("success");if(notifEnabled)scheduleSmartReminder({hour:reminderHour,minute:0,days:reminderDays,smart:reminderSmart,lang,getTransactions:()=>transactions});showToast(L.settingsSaved);onClose();}}
+            style={{display:"block",margin:"14px 16px 24px",width:"calc(100% - 32px)",padding:"14px 0",borderRadius:14,background:`linear-gradient(135deg,${themeAccent},${themePrimary})`,border:"none",color:"white",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>{L.saveSettings}</button>
         </div>
       </div>
     </div>
@@ -757,13 +757,13 @@ function CicilanModal({ show, onClose, cicilan, setCicilan, lang, L, T, themeAcc
               <div style={{background:`linear-gradient(135deg,${themePrimary},${themeAccent}88)`,padding:"18px 20px 20px"}}>
                 <p style={{fontSize:18,fontWeight:900,color:"white"}}>{detail.name}</p>
                 <div style={{display:"flex",gap:20,marginTop:12}}>
-                  <div><p style={{fontSize:16,fontWeight:900,color:"white"}}>{formatRp(detail.monthly)}</p><p style={{fontSize:10,color:"rgba(255,255,255,0.6)",fontWeight:600}}>{lang==="en"?"per month":"per bulan"}</p></div>
-                  <div><p style={{fontSize:16,fontWeight:900,color:"white"}}>{getPaid(detail)}/{detail.duration}</p><p style={{fontSize:10,color:"rgba(255,255,255,0.6)",fontWeight:600}}>{lang==="en"?"months":"bulan"}</p></div>
+                  <div><p style={{fontSize:16,fontWeight:900,color:"white"}}>{formatRp(detail.monthly)}</p><p style={{fontSize:10,color:"rgba(255,255,255,0.6)",fontWeight:600}}>{L.perMonthLabel}</p></div>
+                  <div><p style={{fontSize:16,fontWeight:900,color:"white"}}>{getPaid(detail)}/{detail.duration}</p><p style={{fontSize:10,color:"rgba(255,255,255,0.6)",fontWeight:600}}>{L.monthsLabel}</p></div>
                   <div><p style={{fontSize:16,fontWeight:900,color:"white"}}>tgl {detail.dueDay}</p><p style={{fontSize:10,color:"rgba(255,255,255,0.6)",fontWeight:600}}>{lang==="en"?"due":"jatuh tempo"}</p></div>
                 </div>
               </div>
               <div style={{padding:"14px 20px",borderBottom:`1px solid ${T.cardBorder}`}}>
-                <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.textSub,fontWeight:600,marginBottom:8}}><span>{lang==="en"?"Progress":"Progress cicilan"}</span><span>{getPct(detail)}%</span></div>
+                <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.textSub,fontWeight:600,marginBottom:8}}><span>{L.progressCicilan}</span><span>{getPct(detail)}%</span></div>
                 <div style={{height:8,borderRadius:99,background:T.card2,overflow:"hidden"}}><div style={{height:"100%",width:`${getPct(detail)}%`,background:`linear-gradient(90deg,${themeAccent},${themePrimary})`,borderRadius:99,transition:"width 0.6s ease"}}/></div>
                 <div style={{display:"flex",justifyContent:"space-between",marginTop:6,fontSize:11,color:T.textSub}}><span>{lang==="en"?"Paid:":"Sudah:"} {formatRp(getPaid(detail)*detail.monthly)}</span><span>{lang==="en"?"Left:":"Sisa:"} {formatRp((detail.duration-getPaid(detail))*detail.monthly)}</span></div>
               </div>
@@ -772,7 +772,7 @@ function CicilanModal({ show, onClose, cicilan, setCicilan, lang, L, T, themeAcc
                 <button onClick={()=>openEdit(detail)} style={{width:42,height:42,borderRadius:12,background:T.catBg,border:`1.5px solid ${T.cardBorder}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><Pencil size={15} color={T.text} strokeWidth={2}/></button>
                 <button onClick={()=>del(detail.id)} style={{width:42,height:42,borderRadius:12,background:"#ef444418",border:"1.5px solid #ef444435",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><Trash2 size={15} color="#f87171" strokeWidth={2}/></button>
               </div>
-              <button onClick={()=>setView("list")} style={{display:"block",margin:"12px 20px",width:"calc(100% - 40px)",padding:"10px 0",borderRadius:12,background:T.card2,border:`1.5px solid ${T.cardBorder}`,color:T.textSub,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>← {lang==="en"?"← Back":"← Kembali"}</button>
+              <button onClick={()=>setView("list")} style={{display:"block",margin:"12px 20px",width:"calc(100% - 40px)",padding:"10px 0",borderRadius:12,background:T.card2,border:`1.5px solid ${T.cardBorder}`,color:T.textSub,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>← {L.splitBack}</button>
             </div>
           )}
           {view==="list" && (
@@ -1024,6 +1024,12 @@ export default function App() {
   const [sortOrder, setSortOrder] = useState("date-desc"); // new sort state
   const [showCalc, setShowCalc] = useState(false); // calculator modal
   const [form, setForm] = useState({ date: today(), amount: "", category: "food", description: "", location: "", note: "" });
+  // Check if form has meaningful user input (for discard confirmation)
+  const formIsDirty = () => !editItem && (!!form.amount || !!form.description || !!form.location || !!form.note);
+  const closeFormSafe = () => {
+    if (formIsDirty()) { setShowDiscardConfirm(true); }
+    else { setShowForm(false); setEditItem(null); }
+  };
   const [editIncome, setEditIncome] = useState(false);
   const headerRef = useRef(null);
   const sharedHeaderRef = useRef(null);
@@ -1157,6 +1163,14 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem("gm_tx_receipts") || "{}"); } catch { return {}; }
   });
   useEffect(() => { try { localStorage.setItem("gm_tx_receipts", JSON.stringify(txReceipts)); } catch {} }, [txReceipts]);
+
+  const [userTags, setUserTags] = useState(() => { try { return JSON.parse(localStorage.getItem("gm_user_tags") || "[]"); } catch { return []; } });
+  useEffect(() => { try { localStorage.setItem("gm_user_tags", JSON.stringify(userTags)); } catch {} }, [userTags]);
+
+  const [txTags, setTxTags] = useState(() => { try { return JSON.parse(localStorage.getItem("gm_tx_tags") || "{}"); } catch { return {}; } });
+  useEffect(() => { try { localStorage.setItem("gm_tx_tags", JSON.stringify(txTags)); } catch {} }, [txTags]);
+
+  const [showTagModal, setShowTagModal] = useState(false);
   const [showNameEdit, setShowNameEdit] = useState(false);
   const [tempName, setTempName] = useState("");
   const [toast, setToast] = useState(null);
@@ -1235,6 +1249,7 @@ export default function App() {
   // Delete with undo
   const [confirmDelete, setConfirmDelete] = useState(null); // kept for compatibility
   const [customConfirm, setCustomConfirm] = useState(null); // {msg, onOk}
+  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
   const showConfirm = (msg, onOk) => setCustomConfirm({ msg, onOk });
   const deletedItemRef = useRef(null);
   const isRestoringRef = useRef(false);
@@ -1715,10 +1730,10 @@ export default function App() {
     scores.budget = overBudget === 0 ? 15 : overBudget === 1 ? 8 : 0;
 
     score = Object.values(scores).reduce((s,v) => s+v, 0);
-    const label = score >= 80 ? (lang==="en"?"Excellent":"Sangat Baik") :
-                  score >= 60 ? (lang==="en"?"Good":"Baik") :
-                  score >= 40 ? (lang==="en"?"Fair":"Cukup") :
-                  (lang==="en"?"Need Attention":"Perlu Perhatian");
+    const label = score >= 80 ? (L.healthExcellent) :
+                  score >= 60 ? (L.healthGood) :
+                  score >= 40 ? (L.healthFair) :
+                  (L.healthNeedAttention);
     const color = score >= 80 ? "#4ade80" : score >= 60 ? themeAccent : score >= 40 ? "#fbbf24" : "#f87171";
     return { score, label, color, scores };
   }, [transactions, income, totalExpense, currentMonth, streak, savingsGoals, budgets, lang]);
@@ -1843,63 +1858,6 @@ export default function App() {
     [...transactions].sort((a, b) => b.id - a.id).slice(0, recentCount),
     [transactions, recentCount]);
 
-  const submitForm = () => {
-    if (!form.amount || !form.description) return;
-    haptic("success");
-    if (editItem) {
-      setTransactions(prev => prev.map(t => t.id === editItem ? { ...form, id: editItem, amount: Number(form.amount) } : t));
-      setEditItem(null);
-      showToast("ok:"+L.txUpdated);
-    } else {
-      const newAmount = Number(form.amount);
-      setTransactions(prev => {
-        const updated = [...prev, { ...form, id: Date.now(), amount: newAmount }];
-        // Cek budget warning setelah tambah
-        const catKey = form.category;
-        const limit = budgets[catKey] || 0;
-        if (limit > 0 && !isRestoringRef.current) {
-          const spent = updated.filter(t => t.category === catKey && t.date.startsWith(getMonth(form.date))).reduce((s,t) => s+t.amount, 0);
-          const catName = getCatLabel(categories[catKey], lang) || catKey;
-          const pct = Math.round(spent / limit * 100);
-          if (spent >= limit) {
-            setTimeout(() => {
-              showToast(lang === "en"
-                ? `warn:${catName} budget exceeded! (${pct}% used)`
-                : `warn:Budget ${catName} terlampaui! (${pct}% terpakai)`);
-              if (notifEnabled) sendLocalNotification(
-                lang === "en" ? "Budget Alert" : "Peringatan Budget",
-                lang === "en" ? `${catName} budget is over the limit (${pct}%)` : `Budget ${catName} sudah melebihi batas (${pct}%)`
-              );
-            }, 400);
-          } else if (spent >= limit * 0.8) {
-            setTimeout(() => {
-              showToast(lang === "en"
-                ? `warn:${catName} budget at ${pct}% — almost full!`
-                : `warn:Budget ${catName} sudah ${pct}% — hampir habis!`);
-              if (notifEnabled && pct >= 90) sendLocalNotification(
-                lang === "en" ? "Budget Warning" : "Peringatan Budget",
-                lang === "en" ? `${catName} budget is at ${pct}%` : `Budget ${catName} sudah ${pct}%`
-              );
-            }, 400);
-          }
-        }
-        return updated;
-      });
-      showToast("ok:"+L.txAdded);
-    }
-    setForm({ date: today(), amount: "", category: Object.keys(categories)[0] || "other", description: "", location: "", note: "" });
-    setShowForm(false);
-  };
-
-  const startEdit = (t) => {
-    const amtDisplay = t.amount ? Number(t.amount).toLocaleString("id-ID") : "";
-    setForm({ date: t.date, amount: t.amount, amountDisplay: amtDisplay, category: t.category, description: t.description, location: t.location, note: t.note||"" });
-    setEditItem(t.id);
-    setShowForm(true);
-  };
-
-  // (deleteTransaction defined above with undo support)
-
   const saveCat = () => {
     if (!catForm.label.trim()) return;
     if (editCatKey) {
@@ -1963,8 +1921,67 @@ export default function App() {
       showToast("err:Notifikasi tidak didukung");
     }
   };
+  const startEdit = (t) => {
+    const amtDisplay = t.amount ? Number(t.amount).toLocaleString("id-ID") : "";
+    setForm({ date: t.date, amount: t.amount, amountDisplay: amtDisplay, category: t.category, description: t.description, location: t.location, note: t.note||"" });
+    setEditItem(t.id);
+    setShowForm(true);
+  };
+
+
+  const submitForm = () => {
+    if (!form.amount || !form.description) return;
+    haptic("success");
+    if (editItem) {
+      setTransactions(prev => prev.map(t => t.id === editItem ? { ...form, id: editItem, amount: Number(form.amount) } : t));
+      setEditItem(null);
+      showToast("ok:"+L.txUpdated);
+    } else {
+      const newAmount = Number(form.amount);
+      setTransactions(prev => {
+        const updated = [...prev, { ...form, id: Date.now(), amount: newAmount }];
+        // Cek budget warning setelah tambah
+        const catKey = form.category;
+        const limit = budgets[catKey] || 0;
+        if (limit > 0 && !isRestoringRef.current) {
+          const spent = updated.filter(t => t.category === catKey && t.date.startsWith(getMonth(form.date))).reduce((s,t) => s+t.amount, 0);
+          const catName = getCatLabel(categories[catKey], lang) || catKey;
+          const pct = Math.round(spent / limit * 100);
+          if (spent >= limit) {
+            setTimeout(() => {
+              showToast(lang === "en"
+                ? `warn:${catName} budget exceeded! (${pct}% used)`
+                : `warn:Budget ${catName} terlampaui! (${pct}% terpakai)`);
+              if (notifEnabled) sendLocalNotification(
+                lang === "en" ? "Budget Alert" : "Peringatan Budget",
+                lang === "en" ? `${catName} budget is over the limit (${pct}%)` : `Budget ${catName} sudah melebihi batas (${pct}%)`
+              );
+            }, 400);
+          } else if (spent >= limit * 0.8) {
+            setTimeout(() => {
+              showToast(lang === "en"
+                ? `warn:${catName} budget at ${pct}% — almost full!`
+                : `warn:Budget ${catName} sudah ${pct}% — hampir habis!`);
+              if (notifEnabled && pct >= 90) sendLocalNotification(
+                lang === "en" ? "Budget Warning" : "Peringatan Budget",
+                lang === "en" ? `${catName} budget is at ${pct}%` : `Budget ${catName} sudah ${pct}%`
+              );
+            }, 400);
+          }
+        }
+        return updated;
+      });
+      showToast("ok:"+L.txAdded);
+    }
+    setForm({ date: today(), amount: "", category: Object.keys(categories)[0] || "other", description: "", location: "", note: "" });
+    setShowForm(false);
+  };
+
+  // (deleteTransaction defined above with undo support)
+
 
   const todayStr = today();
+
 
   return (
     <div className={`theme-transition${themeChanging ? " theme-flash" : ""}`} style={{ minHeight:"100dvh", background:T.bg, "--primary":themePrimary, "--accent":themeAccent }}>
@@ -2041,7 +2058,7 @@ export default function App() {
               <div style={{ width:"100%", maxWidth:400 }}>
                 <p style={{ fontSize:11, fontWeight:800, color:themeAccent, letterSpacing:1, margin:"0 0 6px" }}>{lang==="en" ? "STEP 3 / 4" : "LANGKAH 3 / 4"}</p>
                 <p style={{ fontSize:26, fontWeight:900, color:T.text, margin:"0 0 4px", lineHeight:1.15 }}>{lang==="en" ? "Monthly\nincome?" : "Pemasukan\nbulan ini?"}</p>
-                <p style={{ fontSize:13, color:T.textSub, margin:"0 0 16px" }}>{lang==="en"?"You can change this anytime.":"Bisa diubah kapan saja di Pengaturan."}</p>
+                <p style={{ fontSize:13, color:T.textSub, margin:"0 0 16px" }}>{L.changeAnytime}</p>
                 <div style={{ position:"relative", marginBottom:8 }}>
                   <span style={{ position:"absolute", left:16, top:"50%", transform:"translateY(-50%)", fontSize:13, color:T.textSub, fontWeight:700, pointerEvents:"none" }}>Rp</span>
                   <input type="text" inputMode="numeric" value={onboardIncomeDisplay}
@@ -2178,13 +2195,24 @@ export default function App() {
       {/* Install banner */}
       {showInstallBanner && (
         <div style={{ position:"fixed",bottom:"72px",left:14,right:14,zIndex:500,background:themePrimary,borderRadius:20,padding:"14px 16px",display:"flex",alignItems:"center",gap:12,boxShadow:`0 8px 32px ${themePrimary}88` }}>
-          <Download size={28} color={T.primaryText} strokeWidth={1.5}/>
+          <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
           <div style={{ flex:1 }}>
             <p style={{ fontSize:13,fontWeight:800,color:"white" }}>Pasang ke Home Screen</p>
             <p style={{ fontSize:11,color:"rgba(255,255,255,0.7)" }}>Akses lebih cepat, bisa offline!</p>
           </div>
           <button onClick={() => { haptic(); installPrompt && installPrompt.prompt(); setShowInstallBanner(false); }} style={{ background:"white",color:themePrimary,border:"none",borderRadius:12,padding:"8px 14px",fontSize:12,fontWeight:800,cursor:"pointer" }}>Pasang</button>
           <button onClick={() => setShowInstallBanner(false)} style={{ background:"rgba(255,255,255,0.2)",border:"none",borderRadius:10,padding:8,cursor:"pointer",display:"flex" }}><X size={14} color="white"/></button>
+        </div>
+      )}
+
+      {/* Offline indicator */}
+      {!isOnline && (
+        <div style={{ position:"fixed", top:0, left:0, right:0, zIndex:600, background:"#1c1917", padding:"10px 16px", display:"flex", alignItems:"center", gap:10, boxShadow:"0 2px 12px rgba(0,0,0,0.4)" }}>
+          <WifiOff size={16} color="#fbbf24" strokeWidth={2}/>
+          <div style={{ flex:1 }}>
+            <p style={{ fontSize:13, fontWeight:800, color:"#fbbf24", margin:0 }}>{L.offlineTitle}</p>
+            <p style={{ fontSize:11, color:"rgba(255,255,255,0.55)", margin:0 }}>{L.offlineDesc}</p>
+          </div>
         </div>
       )}
 
@@ -2213,6 +2241,31 @@ export default function App() {
               <button onClick={() => { customConfirm.onOk(); setCustomConfirm(null); }}
                 style={{ flex:1, padding:"12px", borderRadius:12, border:"none", background:"#ef4444", color:"white", fontSize:14, fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
                 {L.done||"OK"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Discard Confirmation Modal */}
+      {showDiscardConfirm && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.65)", zIndex:99999, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 32px" }}
+          onClick={() => setShowDiscardConfirm(false)}>
+          <div style={{ background:T.card, borderRadius:22, padding:"24px 20px", width:"100%", maxWidth:320, boxShadow:"0 16px 48px rgba(0,0,0,0.4)" }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ width:44, height:44, borderRadius:14, background:"rgba(239,68,68,0.12)", border:"1.5px solid rgba(239,68,68,0.25)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.2" strokeLinecap="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            </div>
+            <p style={{ fontSize:16, fontWeight:900, color:T.text, marginBottom:6 }}>{L.discardTitle}</p>
+            <p style={{ fontSize:13, color:T.textSub, marginBottom:20, lineHeight:1.5 }}>{L.discardDesc}</p>
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => setShowDiscardConfirm(false)}
+                style={{ flex:1, padding:"12px", borderRadius:12, border:`1.5px solid ${T.cardBorder}`, background:T.inp, color:T.text, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+                {L.discardCancel}
+              </button>
+              <button onClick={() => { setShowDiscardConfirm(false); setShowForm(false); setEditItem(null); haptic(); }}
+                style={{ flex:1, padding:"12px", borderRadius:12, border:"none", background:"#ef4444", color:"white", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
+                {L.discardConfirm}
               </button>
             </div>
           </div>
@@ -2280,13 +2333,13 @@ export default function App() {
                   ))}
                 </div>
                 <p style={{ fontSize:11, fontWeight:700, color:T.textSub, marginBottom:6 }}>
-                  {isAdd ? (lang==="en"?"Current income":"Pemasukan saat ini") : (lang==="en"?"Current income":"Pemasukan saat ini")}
+                  {isAdd ? (L.currentIncome) : (L.currentIncome)}
                 </p>
                 <input className="inp" type="text" inputMode="numeric" placeholder="5.000.000" value={tempIncomeDisplay} autoFocus
                   onChange={e => { const {display,raw}=parseRpInput(e.target.value); setTempIncomeDisplay(display); setTempIncome(raw); }}
                   style={{ background:T.inp, border:`1.5px solid ${T.inpBorder}`, color:T.text, marginBottom:10 }}/>
                 <p style={{ fontSize:11, fontWeight:700, color:T.textSub, marginBottom:6 }}>
-                  {isAdd ? (lang==="en"?"Amount to add":"Jumlah yang ditambah") : (lang==="en"?"Amount to subtract":"Jumlah yang dikurangi")}
+                  {isAdd ? (L.amountAdd) : (L.amountSubtract)}
                 </p>
                 <input className="inp" type="text" inputMode="numeric" placeholder="0" value={incomeAdjDisplay||""}
                   onChange={e => { const {display,raw}=parseRpInput(e.target.value); setIncomeAdjDisplay(display); setIncomeAdj(raw); }}
@@ -2301,7 +2354,7 @@ export default function App() {
                     setIncome(nv); setEditIncome(false);
                     showToast("ok:"+L.incomeSaved);
                   }}>
-                  {isAdd ? (lang==="en"?"Save & Add":"Simpan & Tambah") : (lang==="en"?"Save & Subtract":"Simpan & Kurangi")}
+                  {isAdd ? (L.saveAndAdd) : (L.saveAndSubtract)}
                 </button>
               </>);
             })()}
@@ -2516,6 +2569,7 @@ export default function App() {
 )}
 
         {tab === "dashboard" && (
+          <>
           <div key="dashboard" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"16px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
             {!loaded && (
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
@@ -2597,7 +2651,7 @@ export default function App() {
             })()}
 
             {/* ── Streak + Weekly Insight ── */}
-            <div style={{ display:"flex", gap:12, marginBottom:12 }}>
+            <div style={{ display:"flex", gap:10, marginBottom:14 }}>
               {/* Streak card */}
               <div className="card" style={{ flex:1, padding:"14px 14px", ...CS, display:"flex", flexDirection:"column", gap:4 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
@@ -2608,7 +2662,7 @@ export default function App() {
                 </div>
                 <p style={{ fontSize:28, fontWeight:900, color:T.text, lineHeight:1 }}>{streak.count}<span style={{ fontSize:13, fontWeight:700, color:T.textSub, marginLeft:2 }}>{lang==="en"?" days":" hari"}</span></p>
                 <p style={{ fontSize:10, color:T.textSub, display:"flex", alignItems:"center", gap:4, marginBottom:6 }}>
-                  {streak.count >= 7 ? <><Flame size={11} color={themeAccent} strokeWidth={2}/>{lang==="en"?"On fire!":"Konsisten!"}</> : streak.count >= 3 ? <><DiamondPlus size={11} color="#4ade80" strokeWidth={2}/>{lang==="en"?"Keep going!":"Teruskan!"}</> : <>{lang==="en"?"Open daily":"Buka tiap hari"}</>}
+                  {streak.count >= 7 ? <><Flame size={11} color={themeAccent} strokeWidth={2}/>{lang==="en"?"On fire!":"Konsisten!"}</> : streak.count >= 3 ? <><TrendingUp size={11} color="#4ade80" strokeWidth={2}/>{lang==="en"?"Keep going!":"Teruskan!"}</> : <>{lang==="en"?"Open daily":"Buka tiap hari"}</>}
                 </p>
                 {/* Fun facts harian */}
                 {(() => {
@@ -2631,7 +2685,7 @@ export default function App() {
                 {weeklyInsight.thisTotal === 0 ? (
                   <p style={{ fontSize:12, color:T.textSub }}>{lang==="en"?"No spending this week yet.":"Belum ada transaksi minggu ini."}</p>
                 ) : (
-                  <React.Fragment>
+                  <>
                     <p style={{ fontSize:18, fontWeight:900, color:T.text, lineHeight:1, marginBottom:3 }}><AnimatedNumber value={weeklyInsight.thisTotal} format={formatRp}/></p>
                     {weeklyInsight.hasBoth && weeklyInsight.diff !== 0 && (
                       <p style={{ fontSize:11, color: weeklyInsight.diff > 0 ? "#f87171" : "#4ade80", fontWeight:700, marginBottom:3 }}>
@@ -2674,62 +2728,14 @@ export default function App() {
                         </div>
                       );
                     })()}
-                  </React.Fragment>
+                  </>
                 )}
               </div>
             </div>
 
             {/* End-of-month prediction card */}
-            {/* ── Financial Health Score card ── */}
-            <div className="card" style={{ padding:"14px 16px", marginBottom:12, ...CS }}>
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
-                <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                  <div style={{ width:28, height:28, borderRadius:9, background:healthScore.color+"22", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <HeartPulse size={14} color={healthScore.color} strokeWidth={2.5}/>
-                  </div>
-                  <p style={{ fontSize:12, fontWeight:800, color:T.textSub, letterSpacing:0.5 }}>{lang==="en"?"FINANCIAL HEALTH":"KESEHATAN FINANSIAL"}</p>
-                </div>
-                <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
-                  <span style={{ fontSize:26, fontWeight:900, color:healthScore.color, lineHeight:1 }}>{healthScore.score}</span>
-                  <span style={{ fontSize:11, color:T.textSub, fontWeight:600 }}>/100</span>
-                </div>
-              </div>
-              {/* Progress bar */}
-              <div style={{ background:dark?"rgba(255,255,255,0.08)":"rgba(0,0,0,0.07)", borderRadius:99, height:8, overflow:"hidden", marginBottom:8 }}>
-                <div style={{ height:"100%", width:`${healthScore.score}%`, background:`linear-gradient(90deg,${healthScore.color}88,${healthScore.color})`, borderRadius:99, transition:"width 0.8s cubic-bezier(0.34,1.2,0.64,1)" }}/>
-              </div>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                <span style={{ fontSize:12, fontWeight:700, color:healthScore.color }}>{healthScore.label}</span>
-                {/* Daily rotating tip */}
-                {(() => {
-                  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
-                  const tips = lang==="en" ? [
-                    { key:"ratio",       text:"Try spending under 70% of income" },
-                    { key:"consistency", text:"Record every transaction today" },
-                    { key:"goals",       text:"Set a savings target to boost score" },
-                    { key:"streak",      text:"Open the app daily to build your streak" },
-                    { key:"budget",      text:"Set category budgets to stay on track" },
-                  ] : [
-                    { key:"ratio",       text:"Coba keluarkan di bawah 70% pemasukan" },
-                    { key:"consistency", text:"Catat setiap transaksi hari ini" },
-                    { key:"goals",       text:"Buat target tabungan untuk naikkan skor" },
-                    { key:"streak",      text:"Buka app tiap hari untuk jaga streak" },
-                    { key:"budget",      text:"Atur budget per kategori supaya terkontrol" },
-                  ];
-                  const tip = tips[dayOfYear % tips.length];
-                  return (
-                    <div style={{ background:healthScore.color+"15", borderRadius:8, padding:"4px 10px", maxWidth:"55%" }}>
-                      <p style={{ fontSize:10, fontWeight:700, color:healthScore.color, lineHeight:1.4, textAlign:"right" }}>{tip.text}</p>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-
-
-
             {monthPrediction && income > 0 && (
-              <div className="card" style={{ padding:"14px 16px", marginBottom:12, ...CS, display:"flex", alignItems:"center", gap:12 }}>
+              <div className="card" style={{ padding:"14px 16px", marginBottom:14, ...CS, display:"flex", alignItems:"center", gap:12 }}>
                 <div style={{ width:36, height:36, borderRadius:12, background: monthPrediction.predicted > income ? "#f87171" + "22" : themeAccent+"22", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
                   <TrendingUp size={16} color={monthPrediction.predicted > income ? "#f87171" : themeAccent} strokeWidth={2.2}/>
                 </div>
@@ -2754,27 +2760,27 @@ export default function App() {
               const allCatKeys = Object.keys(categories);
               // Empty state CTA
               if (budgetEntries.length === 0 && !overallBudget) return (
-                <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
+                <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:44, height:44, borderRadius:14, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
                       <Wallet size={20} color={TP} strokeWidth={2}/>
                     </div>
                     <div style={{ flex:1 }}>
                       <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:2 }}>{L.monthlyBudget}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{lang==="en"?"No budget set yet. Tap to set one.":"Belum ada anggaran. Tap untuk mengatur."}</p>
+                      <p style={{ fontSize:11, color:T.textSub }}>{lang==="en"?"No limits set. Set one to stay on track.":"Belum ada limit. Set biar lebih terkontrol."}</p>
                     </div>
                     <button onClick={() => { haptic(); setTempOverallBudget(overallBudget || 0); setTempOverallBudgetDisplay(overallBudget ? Number(overallBudget).toLocaleString("id-ID") : ""); setShowOverallBudgetModal(true); }} style={{ background:`${TP}18`, border:`1px solid ${TP}33`, borderRadius:10, padding:"7px 12px", color: TP, fontSize:11, fontWeight:800, cursor:"pointer", whiteSpace:"nowrap" }}>
-                      {lang==="en"?"Set Budget":"Atur Anggaran"}
+                      {lang==="en"?"Set Budget":"Set Budget"}
                     </button>
                   </div>
                 </div>
               );
               return (
-                <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
+                <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                       <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <SlidersHorizontal size={13} color={TP} strokeWidth={2.5}/>
+                        <Wallet size={13} color={TP} strokeWidth={2.5}/>
                       </div>
                       <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.monthlyBudget}</p>
                     </div>
@@ -2844,7 +2850,7 @@ export default function App() {
             })()}
 
             {/* Savings Goals Card */}
-            <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
+            <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -2853,7 +2859,7 @@ export default function App() {
                   <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.savingsGoal}</p>
                 </div>
                 {savingsGoals.length > 0 && (
-                  <button onClick={() => { haptic(); setEditingGoal("new"); setGoalForm({ label:"", target:"", targetDisplay:"", saved:"", savedDisplay:"", color:"#60a5fa", icon:"piggy" }); }}
+                  <button onClick={() => { setEditingGoal("new"); setGoalForm({ label:"", target:"", targetDisplay:"", saved:"", savedDisplay:"", color:"#60a5fa", icon:"piggy" }); }}
                     style={{ background:"none", border:"none", fontSize:12, color:TP, fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", gap:3 }}>
                     <Plus size={13} strokeWidth={2.5}/> {lang==="en"?"Add":"+ Tambah"}
                   </button>
@@ -2864,7 +2870,7 @@ export default function App() {
                 <div style={{ textAlign:"center", padding:"24px 0 8px" }}>
                   <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                     <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Rocket size={36} color={T.accentText} strokeWidth={1.5}/>
+                      <PiggyBank size={36} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:14, fontWeight:700, color:T.text, marginBottom:4 }}>{L.noGoal}</p>
@@ -2982,12 +2988,13 @@ export default function App() {
               )}
             </div>
 
+
             {/* Recent transactions */}
-            <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
+            <div className="card" style={{ padding:16, marginBottom:14, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <Receipt size={13} color={TP} strokeWidth={2.5}/>
+                    <Wallet size={13} color={TP} strokeWidth={2.5}/>
                   </div>
                   <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.recentTx}</p>
                 </div>
@@ -2999,7 +3006,7 @@ export default function App() {
                 <div style={{ textAlign:"center", padding:"28px 16px" }}>
                   <div style={{ marginBottom:14, display:"flex", justifyContent:"center" }}>
                     <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <HandCoins size={32} color={T.accentText} strokeWidth={1.5}/>
+                      <Wallet size={32} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:15, fontWeight:900, color:T.text, marginBottom:6 }}>{L.noTx}</p>
@@ -3032,29 +3039,30 @@ export default function App() {
             </div>
 
             {/* Donut Chart */}
-            <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
-              <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}><div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}><ChartPie size={13} strokeWidth={2} color={TP}/></div><p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.breakdownCat}</p></div>
+            <div className="card" style={{ padding:16, marginBottom:14, ...CS }}>
+              <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}><div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}><BarChart2 size={13} strokeWidth={2} color={TP}/></div><p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.breakdownCat}</p></div>
               {catBreakdown.length === 0 ? (
                 <div style={{ textAlign:"center", padding:"40px 20px" }}>
                 <div style={{ display:"flex", justifyContent:"center", marginBottom:14 }}>
                   <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <X size={32} color={T.accentText} strokeWidth={1.5}/>
+                    <BarChart2 size={32} color={T.accentText} strokeWidth={1.5}/>
                   </div>
                 </div>
                 <p style={{ fontSize:16, fontWeight:800, color:T.text, marginBottom:8 }}>{L.noData}</p>
                 <p style={{ fontSize:13, color:T.textSub, lineHeight:1.6 }}>{L.startDesc}</p>
               </div>
               ) : (
-                <DonutChart data={donutData} total={totalExpense} T={T} />
+                <DonutChart data={donutData} total={totalExpense} T={T} lang={lang} />
               )}
             </div>
           </div>
+        </>
         )}
-
         {/* ── TRANSACTIONS ── */}
         {tab === "transactions" && (
+          <>
           <div key="transactions" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0 0 0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, paddingBottom:"16px" }}>
 
             <div style={{ position:"relative",marginBottom:10 }}>
               <Search size={15} color={T.textSub} strokeWidth={2} style={{ position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",pointerEvents:"none" }}/>
@@ -3088,16 +3096,13 @@ export default function App() {
             </div>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
               <p style={{ fontSize:12, color:T.textSub, fontWeight:600 }}>{filtered.length} {L.transactions_label}</p>
-              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                <p key={filteredTotal} style={{ fontSize:12, fontWeight:700, color:"#f87171", animation:"count-up 0.3s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>-{formatRp(filteredTotal)}</p>
-
-              </div>
+              <p key={filteredTotal} style={{ fontSize:12, fontWeight:700, color:"#f87171", animation:"count-up 0.3s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>-{formatRp(filteredTotal)}</p>
             </div>
 
             {filtered.length === 0 ? (
               <div className="card" style={{ padding:"48px 20px 40px",textAlign:"center",background:T.card,border:`1px solid ${T.cardBorder}` }}>
                 {searchQuery ? (
-                  <React.Fragment>
+                  <>
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
                       <div style={{ width:80, height:80, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}18,${themePrimary}14)`, border:`1.5px solid ${themeAccent}25`, display:"flex", alignItems:"center", justifyContent:"center" }}>
                         <Search size={34} color={T.accentText} strokeWidth={1.5}/>
@@ -3105,11 +3110,11 @@ export default function App() {
                     </div>
                     <p style={{ fontSize:16,fontWeight:900,color:T.text,marginBottom:6 }}>{L.noTxFound}</p>
                     <p style={{ fontSize:13,color:T.textSub,lineHeight:1.5 }}>{L.noTxFoundDesc} "{searchQuery}"</p>
-                  </React.Fragment>
+                  </>
                 ) : (
-                  <React.Fragment>
+                  <>
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
-                      <div style={{ width:88, height:88, borderRadius:26, background:`${themeAccent}14`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                      <div className="empty-float" style={{ width:88, height:88, borderRadius:26, background:`${themeAccent}14`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
                         <CirclePlus size={38} color={themeAccent} strokeWidth={1.5}/>
                       </div>
                     </div>
@@ -3119,7 +3124,7 @@ export default function App() {
                       onClick={() => { haptic(); setShowForm(true); setEditItem(null); }}>
                       <Plus size={16} strokeWidth={2.5}/> {lang==="en"?"Add first transaction":"Catat transaksi pertama"}
                     </button>
-                  </React.Fragment>
+                  </>
                 )}
               </div>
             ) : (
@@ -3146,9 +3151,30 @@ export default function App() {
                               <div style={{ flex:1, minWidth:0 }}>
                                 <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{t.description}</p>
                                 <p style={{ fontSize:11, color:T.textSub, marginTop:2 }}>{getCatLabel(cat, lang)}{t.location ? ` · ${t.location}` : ""}{t.note ? ` · ${t.note}` : ""}</p>
-                                {txReceipts[String(t.id)] && (
+                                {/* Tag badges */}
+                                {((txTags||{})[t.id]||[]).length > 0 && (
                                   <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginTop:4 }}>
-                                    <span style={{ display:"inline-flex", alignItems:"center", gap:3, padding:"2px 7px", borderRadius:99, background:T.catBg, border:`1px solid ${T.cardBorder}`, fontSize:10, fontWeight:700, color:T.textSub }}><ImagePlus size={8} color={T.textSub} strokeWidth={2}/>{L.receiptPhoto}</span>
+                                    {((txTags||{})[t.id]||[]).map(tagId => {
+                                      const tag = (userTags||[]).find(tg=>tg.id===tagId);
+                                      if (!tag) return null;
+                                      return (
+                                        <span key={tagId} style={{ display:"inline-flex", alignItems:"center", gap:3, padding:"2px 7px", borderRadius:99, background:tag.color+"18", border:`1px solid ${tag.color}40`, fontSize:10, fontWeight:700, color:tag.color }}>
+                                          <Hash size={8} color={tag.color} strokeWidth={2.5}/>{tag.name}
+                                        </span>
+                                      );
+                                    })}
+                                    {txReceipts?.[t.id] && (
+                                      <span style={{ display:"inline-flex", alignItems:"center", gap:3, padding:"2px 7px", borderRadius:99, background:T.catBg, border:`1px solid ${T.cardBorder}`, fontSize:10, fontWeight:700, color:T.textSub }}>
+                                        <Image size={8} color={T.textSub} strokeWidth={2}/>{L.receiptPhoto}
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                                {txReceipts?.[t.id] && !((txTags||{})[t.id]||[]).length && (
+                                  <div style={{ marginTop:4 }}>
+                                    <span style={{ display:"inline-flex", alignItems:"center", gap:3, padding:"2px 7px", borderRadius:99, background:T.catBg, border:`1px solid ${T.cardBorder}`, fontSize:10, fontWeight:700, color:T.textSub }}>
+                                      <Image size={8} color={T.textSub} strokeWidth={2}/>{L.receiptPhoto}
+                                    </span>
                                   </div>
                                 )}
                               </div>
@@ -3184,43 +3210,26 @@ export default function App() {
               {(() => {
                 const pendingRecurs = recurring.filter(r => r.autoApply === false);
                 return (
-                  <div style={{ display:"flex", flexDirection:"column", gap:6, marginBottom: showRecurPanel ? 12 : 0 }}>
-                    {/* Sub-header Cicilan */}
-                    <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:16 }}>
-                      <div onClick={() => { haptic(); setShowCicilanModal(true); }} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
-                        <CreditCard size={11} color={T.accentText} strokeWidth={2}/>
-                        <p style={{ fontSize:11, fontWeight:800, color:T.accentText, letterSpacing:1.5 }}>{L.cicilan.toUpperCase()}</p>
-                        {cicilan.length > 0 && <span style={{ background:themeAccent, borderRadius:99, minWidth:14, height:14, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 3px", fontSize:9, fontWeight:900, color:"white" }}>{cicilan.length}</span>}
-                      </div>
-                      <div style={{ width:1, height:14, background:T.cardBorder }}/>
-                      <div onClick={() => { haptic(); setShowSplitBills(true); }} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
-                        <Users size={11} color={T.accentText} strokeWidth={2}/>
-                        <p style={{ fontSize:11, fontWeight:800, color:T.accentText, letterSpacing:1.5 }}>{lang==="en"?"SPLIT BILLS":"PATUNGAN"}</p>
-                        {splitBills.filter(s=>!s.settled).length > 0 && <span style={{ background:"#f87171", borderRadius:99, minWidth:14, height:14, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 3px", fontSize:9, fontWeight:900, color:"white" }}>{splitBills.filter(s=>!s.settled).length}</span>}
-                      </div>
+                  <div onClick={() => setShowRecurPanel(p=>!p)} style={{ display:"flex", alignItems:"center", gap:10, marginBottom: showRecurPanel ? 12 : 0, cursor:"pointer" }}>
+                    <div style={{ flex:1, height:1, background:T.cardBorder }}/>
+                    <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                      <DiamondPlus size={11} color={T.textSub} strokeWidth={2}/>
+                      <p style={{ fontSize:11, fontWeight:800, color:T.textSub, letterSpacing:1.5, whiteSpace:"nowrap" }}>{L.recurringTx}</p>
+                      {pendingRecurs.length > 0 && (
+                        <div style={{ background:"#ef4444", borderRadius:99, minWidth:16, height:16, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 4px" }}>
+                          <p style={{ fontSize:9, fontWeight:900, color:"white" }}>{pendingRecurs.length}</p>
+                        </div>
+                      )}
+                      <ChevronDown size={11} color={T.textSub} strokeWidth={2.5} style={{ transform: showRecurPanel?"rotate(180deg)":"rotate(0)", transition:"transform 0.2s" }}/>
                     </div>
-                    {/* Transaksi Rutin - center */}
-                    <div onClick={() => { haptic("light"); setShowRecurPanel(p=>!p); }} style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }}>
-                      <div style={{ flex:1, height:1, background:T.cardBorder }}/>
-                      <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                        <Repeat size={11} color={T.textSub} strokeWidth={2}/>
-                        <p style={{ fontSize:11, fontWeight:800, color:T.textSub, letterSpacing:1.5, whiteSpace:"nowrap" }}>{L.recurringTx}</p>
-                        {pendingRecurs.length > 0 && (
-                          <div style={{ background:"#ef4444", borderRadius:99, minWidth:16, height:16, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 4px" }}>
-                            <p style={{ fontSize:9, fontWeight:900, color:"white" }}>{pendingRecurs.length}</p>
-                          </div>
-                        )}
-                        <ChevronDown size={11} color={T.textSub} strokeWidth={2.5} style={{ transform: showRecurPanel?"rotate(180deg)":"rotate(0)", transition:"transform 0.2s" }}/>
-                      </div>
-                      <div style={{ flex:1, height:1, background:T.cardBorder }}/>
-                    </div>
+                    <div style={{ flex:1, height:1, background:T.cardBorder }}/>
                   </div>
                 );
               })()}
 
-              {showRecurPanel && <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
+              {showRecurPanel && <div className="card" style={{ padding:16, marginBottom:10, ...CS }}>
                 <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
-                  <Repeat size={15} color={themeAccent} strokeWidth={2}/> {L.addRecurring}
+                  <DiamondPlus size={15} color={themeAccent} strokeWidth={2}/> {L.addRecurring}
                 </p>
                 <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
                   <input className="inp" placeholder={L.recurNamePlaceholder} value={recurForm.description}
@@ -3270,7 +3279,7 @@ export default function App() {
                 <div className="card" style={{ padding:"28px 20px", textAlign:"center", ...CSN }}>
                   <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                     <div style={{ width:60, height:60, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Repeat size={26} color={T.accentText} strokeWidth={1.5}/>
+                      <DiamondPlus size={26} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:13, color:T.textSub }}>{L.noRecurring}</p>
@@ -3319,122 +3328,15 @@ export default function App() {
               ))}
             </div>
 
-            {/* ── RECURRING INCOME collapsible ── */}
-            <div style={{ marginTop:4, marginBottom:12 }}>
-              <div style={{ display:"flex", alignItems:"center", marginBottom: showRecurIncomePanel ? 12 : 0 }}>
-                <div onClick={() => { haptic("light"); setShowRecurIncomePanel(p=>!p); }} style={{ display:"flex", alignItems:"center", gap:6, cursor:"pointer", flex:1 }}>
-                  <div style={{ flex:1, height:1, background:"#4ade8033" }}/>
-                  <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                    <DiamondPlus size={11} color="#4ade80" strokeWidth={2}/>
-                    <p style={{ fontSize:11, fontWeight:800, color:"#4ade80", letterSpacing:1.5, whiteSpace:"nowrap" }}>{lang==="en"?"RECURRING INCOME":"PEMASUKAN RUTIN"}</p>
-                    <ChevronDown size={11} color="#4ade80" strokeWidth={2.5} style={{ transform: showRecurIncomePanel?"rotate(180deg)":"rotate(0)", transition:"transform 0.2s" }}/>
-                  </div>
-                  <div style={{ flex:1, height:1, background:"#4ade8033" }}/>
-                </div>
-              </div>
-
-              {showRecurIncomePanel && <div className="card" style={{ padding:16, marginBottom:10, border:"1px solid #4ade8033" }}>
-                <p style={{ fontSize:13, fontWeight:800, color:"#4ade80", marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
-                  <DiamondPlus size={15} color="#4ade80" strokeWidth={2}/> {lang==="en"?"Add Recurring Income":"Tambah Pemasukan Rutin"}
-                </p>
-                <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
-                  <input className="inp" placeholder={lang==="en"?"Name (e.g. Salary, Freelance...)":"Nama (mis: Gaji, Freelance...)"} value={recurIncomeForm.description}
-                    onChange={e => setRecurIncomeForm(f => ({ ...f, description: e.target.value }))}
-                    style={{ background:T.inp, border:"1.5px solid #4ade8055", color:T.text }}/>
-                  <div style={{ display:"flex", gap:8 }}>
-                    <input className="inp" type="text" inputMode="numeric" placeholder="5.000.000" value={recurIncomeForm.amountDisplay||""} onFocus={e => e.target.select()}
-                      onChange={e => { const {display,raw}=parseRpInput(e.target.value); setRecurIncomeForm(f => ({ ...f, amount: raw, amountDisplay: display })); }}
-                      style={{ flex:2, background:T.inp, border:"1.5px solid #4ade8055", color:T.text }}/>
-                    <div style={{ flex:1, display:"flex", flexDirection:"column", gap:3 }}>
-                      <p style={{ fontSize:10, fontWeight:700, color:"#4ade80", paddingLeft:2 }}>{L.dayLabel}</p>
-                      <input className="inp" type="number" min="1" max="31" placeholder={L.recurDay} value={recurIncomeForm.day} onFocus={e => e.target.select()}
-                        onChange={e => setRecurIncomeForm(f => ({ ...f, day: e.target.value }))}
-                        style={{ background:T.inp, border:"1.5px solid #4ade8055", color:T.text }}/>
-                    </div>
-                  </div>
-                  <div onClick={() => { haptic(); setRecurIncomeForm(f => ({ ...f, autoApply: !f.autoApply })); }} style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 14px", background:T.catBg, borderRadius:12, cursor:"pointer", userSelect:"none" }}>
-                    <div style={{ width:20, height:20, borderRadius:6, border:`2px solid ${recurIncomeForm.autoApply ? "#4ade80" : T.catBorder}`, background: recurIncomeForm.autoApply ? "#4ade80" : "transparent", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, transition:"all 0.15s" }}>
-                      {recurIncomeForm.autoApply && <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                    </div>
-                    <div>
-                      <p style={{ fontSize:13, fontWeight:700, color:T.text }}>{L.autoApply}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{L.autoApplyDesc}</p>
-                    </div>
-                  </div>
-                  <button style={{ padding:"10px", fontSize:13, borderRadius:12, border:"none", background:"#4ade80", color:"#052e16", fontWeight:800, cursor:"pointer", fontFamily:"inherit" }} onClick={() => {
-                    if (!recurIncomeForm.description || !recurIncomeForm.amount) return;
-                    if (editRecurIncomeId) {
-                      setRecurringIncome(prev => prev.map(x => x.id === editRecurIncomeId ? { ...recurIncomeForm, id: editRecurIncomeId } : x));
-                      setEditRecurIncomeId(null);
-                      haptic("success"); showToast("ok:"+(lang==="en"?"Income updated":"Pemasukan diperbarui"));
-                    } else {
-                      setRecurringIncome(prev => [...prev, { ...recurIncomeForm, id: Date.now() }]);
-                      haptic("success"); showToast("ok:"+(lang==="en"?"Recurring income added":"Pemasukan rutin ditambahkan"));
-                    }
-                    setRecurIncomeForm({ description:"", amount:"", amountDisplay:"", day:1, autoApply:true });
-                  }}>{editRecurIncomeId ? <span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}><Save size={14} strokeWidth={2}/>{L.done}</span> : "+ "+(lang==="en"?"Add Income":"Tambah Pemasukan")}</button>
-                </div>
-              </div>}
-
-              {showRecurIncomePanel && (recurringIncome.length === 0 ? (
-                <div className="card" style={{ padding:"28px 20px", textAlign:"center", border:"1px solid #4ade8022" }}>
-                  <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
-                    <div style={{ width:60, height:60, borderRadius:"50%", background:"#4ade8022", border:"1.5px solid #4ade8030", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <DiamondPlus size={26} color="#4ade80" strokeWidth={1.5}/>
-                    </div>
-                  </div>
-                  <p style={{ fontSize:13, color:"#4ade80", opacity:0.7 }}>{lang==="en"?"No recurring income yet":"Belum ada pemasukan rutin"}</p>
-                </div>
-              ) : (
-                <div className="card" style={{ borderRadius:18, overflow:"hidden", border:"1px solid #4ade8033" }}>
-                  {recurringIncome.map((r, idx) => {
-                    const isManual = r.autoApply === false;
-                    return (
-                      <div key={r.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"13px 14px", borderBottom: idx < recurringIncome.length-1 ? "1px solid #4ade8022" : "none" }}>
-                        <div style={{ width:40, height:40, borderRadius:12, background:"#4ade8025", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                          <DiamondPlus size={20} color="#4ade80" strokeWidth={2}/>
-                        </div>
-                        <div style={{ flex:1, minWidth:0 }}>
-                          <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{r.description}</p>
-                          <p style={{ fontSize:11, color:T.textSub, marginTop:2 }}>{L.recurDay} {r.day} {L.recurEach} {r.autoApply !== false ? <span style={{color:"#4ade80",fontWeight:700}}>{lang==="en"?"· Auto":"· Otomatis"}</span> : <span style={{color:"#fbbf24",fontWeight:700}}>· Manual</span>}</p>
-                        </div>
-                        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:5 }}>
-                          <p style={{ fontSize:13, fontWeight:800, color:"#4ade80" }}>+{formatRp(Number(r.amount))}</p>
-                          <div style={{ display:"flex", gap:5 }}>
-                            {isManual && (
-                              <button onClick={() => {
-                                haptic("light");
-                                setIncome(prev => prev + Number(r.amount));
-                                showToast("ok:"+(lang==="en"?"Income recorded":"Pemasukan dicatat"));
-                              }} style={{ background:"rgba(74,222,128,0.15)", border:"1px solid rgba(74,222,128,0.4)", borderRadius:8, padding:"5px 10px", cursor:"pointer", fontSize:10, fontWeight:800, color:"#4ade80", fontFamily:"inherit" }}>
-                                {lang==="en"?"Record":"Catat"}
-                              </button>
-                            )}
-                            <button onClick={() => { haptic(); setRecurIncomeForm({ description:r.description, amount:r.amount, amountDisplay:r.amount?Number(r.amount).toLocaleString("id-ID"):"", day:r.day, autoApply:r.autoApply!==false }); setEditRecurIncomeId(r.id); }}
-                              style={{ background:T.btnSm, border:`1.5px solid ${T.btnSmBdr}`, borderRadius:8, padding:"5px 8px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                              <Pencil size={13} strokeWidth={2} color={T.btnSmText}/>
-                            </button>
-                            <button onClick={() => { haptic(); setRecurringIncome(prev => prev.filter(x => x.id !== r.id)); showToast("del:"+(lang==="en"?"Income deleted":"Pemasukan dihapus")); }}
-                              style={{ background:T.btnD, border:`1.5px solid ${T.btnDBorder}`, borderRadius:8, padding:"5px 8px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                              <Trash2 size={13} strokeWidth={2} color={T.btnDText}/>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-
             </div>
           </div>
+        </>
         )}
-
         {/* ── REPORT ── */}
         {tab === "report" && (
+          <>
           <div key="report" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, overflowX:"hidden", width:"100%", boxSizing:"border-box", paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, overflowX:"hidden", width:"100%", boxSizing:"border-box", paddingBottom:"16px" }}>
 
             {/* Budget warnings */}
             {Object.entries(budgets).filter(([k,v]) => {
@@ -3447,7 +3349,7 @@ export default function App() {
                 <div key={k} style={{ display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderRadius:14,background:over?"#fef2f2":"#fffbeb",border:`1.5px solid ${over?"#fca5a5":"#fde68a"}`,marginBottom:8 }}>
                   <AlertCircle size={18} color={over?"#ef4444":"#f59e0b"} strokeWidth={2}/>
                   <div style={{ flex:1 }}>
-                    <p style={{ fontSize:13,fontWeight:700,color:over?"#b91c1c":"#92400e" }}>{over?(lang==="en"?"Exceeded":"Terlampaui"):(lang==="en"?"Near limit":"Mendekati batas")}: {getCatLabel(cat, lang)}</p>
+                    <p style={{ fontSize:13,fontWeight:700,color:over?"#b91c1c":"#92400e" }}>{over?(lang==="en"?"Exceeded":"Terlampaui"):(lang==="en"?"Near limit":"Mendekati limit")}: {getCatLabel(cat, lang)}</p>
                     <p style={{ fontSize:11,color:over?"#ef4444":"#f59e0b" }}>{formatRp(spent)} / {formatRp(v)}</p>
                   </div>
                 </div>
@@ -3467,7 +3369,7 @@ export default function App() {
                 <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
                   <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}>
                     <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <LayoutList size={13} strokeWidth={2} color={TP}/>
+                      <BarChart2 size={13} strokeWidth={2} color={TP}/>
                     </div>
                     <p style={{ fontSize:13, fontWeight:800, color:T.text }}>{lang==="en"?"Per Category — This vs Last Month":"Per Kategori — Bulan Ini vs Lalu"}</p>
                   </div>
@@ -3530,7 +3432,7 @@ export default function App() {
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                     <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <BarChart2 size={13} strokeWidth={2} color={TP}/>
+                      <TrendingUp size={13} strokeWidth={2} color={TP}/>
                     </div>
                     <p style={{ fontSize:13, fontWeight:800, color:T.text }}>{lang==="en"?"Category Trend (4 months)":"Tren Kategori (4 bulan)"}</p>
                   </div>
@@ -3701,7 +3603,6 @@ export default function App() {
                 <Download size={14} strokeWidth={2}/> {L.exportReport}
               </button>
             </div>
-
             {/* Share Summary button */}
             {(() => {
               const topCat = Object.entries(
@@ -3744,14 +3645,7 @@ export default function App() {
                       padding:"12px", borderRadius:14, border:`1.5px solid ${themeAccent}`, cursor:"pointer",
                       background: `${themeAccent}15`, color:T.accentText, fontSize:13, fontWeight:800 }}>
                     <MessageCircle size={16} strokeWidth={2} fill={T.accentText}/>
-                    {lang==="en" ? "Share to WhatsApp" : "Bagikan ke WhatsApp"}
-                  </button>
-                  {/* Export as Image */}
-                  <button onClick={() => { haptic(); setShowStoryCard(true); }}
-                    style={{ width:"100%", marginTop:8, display:"flex", alignItems:"center", justifyContent:"center", gap:8,
-                      padding:"12px", borderRadius:14, border:`1.5px solid ${T.cardBorder}`, cursor:"pointer",
-                      background:T.catBg, color:T.text, fontSize:13, fontWeight:800 }}>
-                    <Download size={15} strokeWidth={2}/> {lang==="en"?"Export as Image":"Ekspor sebagai Gambar"}
+                    {L.shareWhatsapp}
                   </button>
                 </div>
               );
@@ -3772,13 +3666,13 @@ export default function App() {
               <div className="card" style={{ padding:40, textAlign:"center", ...CSN }}>
                 <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                   <div style={{ width:60, height:60, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <Ban size={28} color={T.accentText} strokeWidth={1.5}/>
+                    <X size={28} color={T.accentText} strokeWidth={1.5}/>
                   </div>
                 </div>
                 <p style={{ color:T.textSub, fontSize:14 }}>{L.noTxDate}</p>
               </div>
             ) : (
-              <React.Fragment>
+              <>
                 <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
                   <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:11 }}>
                     <div style={{ width:24, height:24, borderRadius:7, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -3871,20 +3765,21 @@ export default function App() {
                       </div>
                     );
                   })()}
-              </React.Fragment>
+              </>
             )}
 
           </div>
             </div>
+        </>
         )}
-
         {/* ── DATE ── */}
         {tab === "date" && (
+          <>
           <div key="date" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, paddingBottom:"16px" }}>
 
             {/* Budget Date card */}
-            <div className="card" style={{ padding:"24px 24px 20px", marginTop:0, marginBottom:12, background: dark?"#1a0d14":"linear-gradient(135deg,#fdf2f8,#fce7f3)", border: dark?"1px solid #3d1a2e":"1px solid #f9a8d4" }}>
+            <div className="card" style={{ padding:"24px 24px 20px", marginTop:0, marginBottom:14, background: dark?"#1a0d14":"linear-gradient(135deg,#fdf2f8,#fce7f3)", border: dark?"1px solid #3d1a2e":"1px solid #f9a8d4" }}>
               <p style={{ fontSize:11, fontWeight:700, color: dark?"#f9a8d4":"#9d174d", letterSpacing:1 }}>{L.dateBudgetTitle}</p>
               <p style={{ fontSize:32, fontWeight:900, color: dark?"#f472b6":"#be185d", margin:"6px 0" }}>{formatRp(dateExpense)}</p>
               <p style={{ fontSize:12, color: dark?"#f9a8d4":"#9d174d", opacity:0.8 }}>
@@ -3893,7 +3788,7 @@ export default function App() {
             </div>
 
             {/* Wishlist Date */}
-            <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
+            <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:"rgba(244,114,182,0.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -3901,7 +3796,7 @@ export default function App() {
                   </div>
                   <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.wishlistTitle}</p>
                 </div>
-                <button onClick={() => { haptic(); setShowWishlistForm(true); }}
+                <button onClick={() => setShowWishlistForm(true)}
                   style={{ background:"none", border:"none", fontSize:12, color:"#f472b6", fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", gap:3 }}>
                   <Plus size={13} strokeWidth={2.5}/> {L.add}
                 </button>
@@ -3944,7 +3839,7 @@ export default function App() {
                     onKeyDown={e => { if(e.key==="Enter" && wishlistInput.trim()){ setDateWishlist(prev => [...prev, { id:Date.now(), label:wishlistInput.trim(), done:false }]); setWishlistInput(""); setShowWishlistForm(false); showToast(L.toastWishlist); } }}
                     style={{ background:T.inp, border:"1.5px solid #f9a8d4", color:T.text, marginBottom:12 }}/>
                   <button className="btn-p" style={{ width:"100%", background:"#f472b6", fontFamily:"inherit" }}
-                    onClick={() => { if(!wishlistInput.trim()) return; haptic("success"); setDateWishlist(prev => [...prev, { id:Date.now(), label:wishlistInput.trim(), done:false }]); setWishlistInput(""); setShowWishlistForm(false); showToast(L.toastWishlist); }}>
+                    onClick={() => { if(!wishlistInput.trim()) return; setDateWishlist(prev => [...prev, { id:Date.now(), label:wishlistInput.trim(), done:false }]); setWishlistInput(""); setShowWishlistForm(false); showToast(L.toastWishlist); }}>
                     {L.save}
                   </button>
                 </div>
@@ -3952,7 +3847,7 @@ export default function App() {
             )}
 
             {/* Catat Pengeluaran Date */}
-            <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
+            <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:"rgba(244,114,182,0.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -4039,7 +3934,7 @@ export default function App() {
                       </div>
                       <div style={{ display:"flex", alignItems:"center", gap:4 }}>
                         <PresetIcon name={preset.icon} size={12} color={isSelected ? preset.accent : T.textSub} strokeWidth={2.5}/>
-                        <span style={{ fontSize:12, fontWeight:700, color: isSelected ? preset.accent : T.textSub }}>{lang==="en" ? (preset.label) : (preset.labelId||preset.label)}</span>
+                        <span style={{ fontSize:12, fontWeight:700, color: isSelected ? preset.accent : T.textSub }}>{L[THEME_LABELS[preset.id]]||preset.label}</span>
                       </div>
                       {isSelected && <span style={{ fontSize:10, color:preset.accent, fontWeight:700, display:"flex", alignItems:"center", gap:3 }}><CheckCircle size={10} color={preset.accent} strokeWidth={2.5}/> {L.active}</span>}
                     </button>
@@ -4099,11 +3994,13 @@ export default function App() {
             </div>
           </div>
         )}
-
+        </>
+        )}
         {/* ── SETTINGS TAB ── */}
         {tab === "settings" && (
+          <>
           <div key="settings" className={`fi${tabAnim ? " tab-enter" : ""}`} style={{ padding:"0" }}>
-            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
+            <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 8}px`, paddingBottom:"16px" }}>
 
             {/* Profile section */}
             <div style={{ background:T.card, borderRadius:20, border:`1px solid ${T.cardBorder}`, overflow:"hidden", marginBottom:12, boxShadow:`0 1px 4px ${T.cardShadow}` }}>
@@ -4126,7 +4023,7 @@ export default function App() {
                         onChange={e => setTempName(e.target.value)}
                         onKeyDown={e => { if(e.key==="Enter"){ setUserName(tempName); setShowNameEdit(false); } }}
                         style={{ fontSize:16, fontWeight:800, color:T.text, background:"transparent", border:"none", borderBottom:`2px solid ${themeAccent}`, borderRadius:0, padding:"2px 0", width:130, outline:"none" }}/>
-                      <button onClick={() => { haptic("success"); setUserName(tempName); setShowNameEdit(false); showToast("ok:"+L.nameSaved); }}
+                      <button onClick={() => { setUserName(tempName); setShowNameEdit(false); showToast("ok:"+L.nameSaved); }}
                         style={{ background:themePrimary, border:"none", borderRadius:8, padding:"4px 10px", color:"white", fontSize:12, fontWeight:700, cursor:"pointer" }}>OK</button>
                     </div>
                   ) : (
@@ -4144,13 +4041,12 @@ export default function App() {
                 style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit" }}>
                 <div style={{ textAlign:"left" }}>
                   <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.displayMode}</p>
-                  <p style={{ fontSize:11, color:T.textSub }}>{dark ? L.darkActive : L.lightActive} · {(lang==="en" ? (THEME_PRESETS.find(p=>p.id===themePresetId)?.label||"Custom") : (THEME_PRESETS.find(p=>p.id===themePresetId)?.labelId||"Kustom"))}</p>
+                  <p style={{ fontSize:11, color:T.textSub }}>{dark ? L.darkActive : L.lightActive} · {THEME_PRESETS.find(p=>p.id===themePresetId)?.label||"Custom"}</p>
                 </div>
                 <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
               </button>
             </div>
 
-            {/* Notifikasi */}
             <div style={{ background:T.card, borderRadius:20, border:`1px solid ${T.cardBorder}`, overflow:"hidden", marginBottom:12, boxShadow:`0 1px 4px ${T.cardShadow}` }}>
               <button onClick={() => setShowNotifModal(true)}
                 style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit" }}>
@@ -4165,13 +4061,63 @@ export default function App() {
               </button>
             </div>
 
-            {/* Kategori - 1 row persis seperti Notifikasi */}
+
+            {/* Cicilan */}
             <div style={{ background:T.card, borderRadius:20, border:`1px solid ${T.cardBorder}`, overflow:"hidden", marginBottom:12, boxShadow:`0 1px 4px ${T.cardShadow}` }}>
-              <button onClick={() => setShowCategoryMenu(true)}
+              <button onClick={() => setShowCicilanModal(true)}
                 style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:10, textAlign:"left" }}>
+                  <CreditCard size={16} color={T.accentText} strokeWidth={2}/>
+                  <div>
+                    <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.cicilan}</p>
+                    <p style={{ fontSize:11, color:T.textSub }}>{cicilan.length > 0 ? `${cicilan.length} ${lang==="en"?"active items":"item aktif"}` : L.noCicilan}</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
+              </button>
+            </div>
+
+            {/* Reminder */}
+            <div style={{ background:T.card, borderRadius:20, border:`1px solid ${T.cardBorder}`, overflow:"hidden", marginBottom:12, boxShadow:`0 1px 4px ${T.cardShadow}` }}>
+              <button onClick={() => setShowReminderModal(true)}
+                style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:10, textAlign:"left" }}>
+                  <Bell size={16} color={T.accentText} strokeWidth={2}/>
+                  <div>
+                    <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.reminderTitle}</p>
+                    <p style={{ fontSize:11, color:T.textSub }}>{L.reminderDesc}</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
+              </button>
+            </div>
+
+            {/* Kategori — 1 card: Limit + Kelola + Tag */}
+            <div style={{ background:T.card, borderRadius:20, border:`1px solid ${T.cardBorder}`, overflow:"hidden", marginBottom:12, boxShadow:`0 1px 4px ${T.cardShadow}` }}>
+              <button onClick={() => setShowBudgetLimit(true)}
+                style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit", borderBottom:`1px solid ${T.cardBorder}` }}>
                 <div style={{ textAlign:"left" }}>
-                  <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Category":"Kategori"}</p>
-                  <p style={{ fontSize:11, color:T.textSub }}>{lang==="en"?"Manage & organise categories":"Atur & kelola kategori"}</p>
+                  <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Per-Category Limits":"Limit per Kategori"}</p>
+                  <p style={{ fontSize:11, color:T.textSub }}>{L.budgetLimitDesc}</p>
+                </div>
+                <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => setShowCatManager(true)}
+                style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit", borderBottom:`1px solid ${T.cardBorder}` }}>
+                <div style={{ textAlign:"left" }}>
+                  <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.manageCategory}</p>
+                  <p style={{ fontSize:11, color:T.textSub }}>{Object.keys(categories).length} {lang==="en"?"active categories":"kategori aktif"}</p>
+                </div>
+                <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => setShowTagModal(true)}
+                style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                  <Hash size={14} color={T.accentText} strokeWidth={2}/>
+                  <div style={{ textAlign:"left" }}>
+                    <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.tags}</p>
+                    <p style={{ fontSize:11, color:T.textSub }}>{userTags.length > 0 ? `${userTags.length} tag` : L.noTags}</p>
+                  </div>
                 </div>
                 <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
               </button>
@@ -4182,8 +4128,8 @@ export default function App() {
               <button onClick={() => setShowDataModal(true)}
                 style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", width:"100%", ...IBN, fontFamily:"inherit" }}>
                 <div style={{ textAlign:"left" }}>
-                  <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Data":"Data"}</p>
-                  <p style={{ fontSize:11, color:T.textSub }}>{L.dataSubtitle}</p>
+                  <p style={{ fontSize:14, fontWeight:700, color:T.text }}>Data</p>
+                  <p style={{ fontSize:11, color:T.textSub }}>{lang==="en"?"Backup, restore & reset":L.dataSubtitle||"Backup, pulihkan & reset"}</p>
                 </div>
                 <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
               </button>
@@ -4191,51 +4137,6 @@ export default function App() {
 
           </div>
         </div>
-        )}
-
-        {/* CATEGORY MENU MODAL */}
-        {showCategoryMenu && (
-          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", backdropFilter:"blur(4px)", WebkitBackdropFilter:"blur(4px)", zIndex:200, display:"flex", alignItems:"flex-end", justifyContent:"center" }}
-            onClick={e => { if(e.target===e.currentTarget) setShowCategoryMenu(false); }}>
-            <div className="modal-up" style={{ background:T.card, borderRadius:"28px 28px 0 0", width:"100%", maxWidth:480, paddingBottom:32 }}>
-              <div style={{ width:36, height:4, background:T.cardBorder, borderRadius:99, margin:"12px auto 0" }}/>
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 20px 12px" }}>
-                <p style={{ fontSize:17, fontWeight:900, color:T.text }}>{lang==="en"?"Category":"Kategori"}</p>
-                <button onClick={() => setShowCategoryMenu(false)} style={{ background:T.catBg, border:"none", borderRadius:50, width:32, height:32, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <X size={16} color={T.textSub} strokeWidth={2.5}/>
-                </button>
-              </div>
-              <div style={{ display:"flex", flexDirection:"column", gap:0, padding:"0 16px 0" }}>
-                <button onClick={() => { setShowCategoryMenu(false); setTimeout(()=>setShowBudgetLimit(true),200); }}
-                  style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", width:"100%", ...IBN, fontFamily:"inherit", borderBottom:`1px solid ${T.cardBorder}` }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:36, height:36, borderRadius:10, background:`${themeAccent}18`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                      <BadgeDollarSign size={18} strokeWidth={2} color={T.accentText}/>
-                    </div>
-                    <div style={{ textAlign:"left" }}>
-                      <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Spending Limits":"Batas Pengeluaran"}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{L.budgetLimitDesc}</p>
-                    </div>
-                  </div>
-                  <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
-                </button>
-                <button onClick={() => { setShowCategoryMenu(false); setTimeout(()=>setShowCatManager(true),200); }}
-                  style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", width:"100%", ...IBN, fontFamily:"inherit", borderBottom:`1px solid ${T.cardBorder}` }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:36, height:36, borderRadius:10, background:`${themePrimary}18`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                      <Settings size={18} strokeWidth={2} color={T.primaryText}/>
-                    </div>
-                    <div style={{ textAlign:"left" }}>
-                      <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.manageCategory}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{lang==="en"?"Manage & organise categories":"Atur & kelola kategori"}</p>
-                    </div>
-                  </div>
-                  <ChevronRight size={16} color={T.textSub} strokeWidth={2.5}/>
-                </button>
-
-              </div>
-            </div>
-          </div>
         )}
 
         {/* BUDGET LIMIT MODAL */}
@@ -4357,13 +4258,13 @@ export default function App() {
             onClick={e => { if (e.target===e.currentTarget) setShowDataModal(false); }}>
             <div className="fi scroll-area modal-up" style={{ background:T.modalBg, borderRadius:"22px 22px 0 0", padding:22, paddingBottom:40, width:"100%", maxWidth:480, boxSizing:"border-box" }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
-                <p style={{ fontSize:16, fontWeight:800, color:T.text }}>{lang==="en"?"Data":"Data"}</p>
+                <p style={{ fontSize:16, fontWeight:800, color:T.text }}>Data</p>
                 <button onClick={() => setShowDataModal(false)} style={{ background:T.btnG, border:"none", borderRadius:10, padding:"6px 14px", cursor:"pointer", fontSize:13, fontWeight:700, color:T.btnGText }}>{L.done}</button>
               </div>
               <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                 <button onClick={() => {
                     try {
-                      const b={version:1,exportedAt:new Date().toISOString(),transactions,income,goals:savingsGoals,budgets,categories,dailyNotes};
+                      const b={version:1,exportedAt:new Date().toISOString(),transactions,income,goals:savingsGoals,budgets,categories};
                       const blob=new Blob([JSON.stringify(b,null,2)],{type:"application/json"});
                       const url=URL.createObjectURL(blob);
                       const a=document.createElement("a");
@@ -4375,7 +4276,7 @@ export default function App() {
                   }}
                   style={{ width:"100%", padding:"14px", borderRadius:16, background:`${themeAccent}15`, border:`1.5px solid ${themeAccent}40`, color:T.accentText, fontSize:14, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", gap:12, boxSizing:"border-box", fontFamily:"inherit" }}>
                   <div style={{ width:38, height:38, borderRadius:12, background:`${themeAccent}20`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><Download size={18} strokeWidth={2} color={T.accentText}/></div>
-                  <div style={{ textAlign:"left" }}><p style={{ fontSize:14, fontWeight:800, color:T.accentText }}>{L.backupData}</p><p style={{ fontSize:11, color:T.accentText, opacity:0.7 }}>{L.backupDesc}</p></div>
+                  <div style={{ textAlign:"left" }}><p style={{ fontSize:14, fontWeight:800, color:T.accentText }}>{L.backupData}</p><p style={{ fontSize:11, color:T.accentText, opacity:0.7 }}>{lang==="en"?"Download all data as JSON":"Unduh semua data sebagai JSON"}</p></div>
                 </button>
                 <button onClick={() => document.getElementById("restore-input").click()}
                   style={{ width:"100%", padding:"14px", borderRadius:16, background:T.catBg, border:`1.5px solid ${T.cardBorder}`, color:T.text, fontSize:14, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", gap:12, boxSizing:"border-box", fontFamily:"inherit" }}>
@@ -4389,14 +4290,16 @@ export default function App() {
                       try {
                         const data=JSON.parse(ev.target.result);
                         if(!data.transactions) throw new Error("invalid");
-                        showConfirm(L.restoreConfirm, () => {
+                        const msg = lang==="en"
+                          ? "Restore this backup? Current data will be replaced."
+                          : "Restore backup ini? Data saat ini akan diganti.";
+                        showConfirm(msg, () => {
                           isRestoringRef.current = true;
                           if(data.transactions) setTransactions(data.transactions);
                           if(data.income) setIncome(data.income);
                           if(data.goals) setSavingsGoals(data.goals);
                           if(data.budgets) setBudgets(data.budgets);
                           if(data.categories) setCategories(data.categories);
-                          if(data.dailyNotes) setDailyNotes(data.dailyNotes);
                           setTimeout(() => { isRestoringRef.current = false; }, 500);
                           showToast(lang==="en"?"ok:Backup restored!":"ok:Backup berhasil dipulihkan!");
                           setShowDataModal(false);
@@ -4412,155 +4315,13 @@ export default function App() {
                 <button onClick={() => { showConfirm(L.resetConfirm, () => { try{localStorage.clear();}catch{} setTransactions([]); setIncome(5000000); setSavingsGoals([]); setBudgets({}); setCategories(DEFAULT_CATEGORIES); showToast("ok:Data berhasil direset"); setShowDataModal(false); }); }}
                   style={{ width:"100%", padding:"14px", borderRadius:16, background:"#ef444412", border:"1.5px solid #ef444435", color:"#ef4444", fontSize:14, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", gap:12, boxSizing:"border-box", fontFamily:"inherit" }}>
                   <div style={{ width:38, height:38, borderRadius:12, background:"#ef444420", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><Trash2 size={18} strokeWidth={2} color="#ef4444"/></div>
-                  <div style={{ textAlign:"left" }}><p style={{ fontSize:14, fontWeight:800, color:"#ef4444" }}>{L.resetData}</p><p style={{ fontSize:11, color:"#ef4444", opacity:0.7 }}>{L.resetDesc}</p></div>
+                  <div style={{ textAlign:"left" }}><p style={{ fontSize:14, fontWeight:800, color:"#ef4444" }}>{L.resetData}</p><p style={{ fontSize:11, color:"#ef4444", opacity:0.7 }}>{lang==="en"?"Delete all data permanently":"Hapus semua data permanen"}</p></div>
                 </button>
               </div>
             </div>
           </div>
         )}
-
-        {/* ── APPEARANCE MODAL ── */}
-        {showAppearanceModal && (
-          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", backdropFilter:"blur(4px)", WebkitBackdropFilter:"blur(4px)", zIndex:300, display:"flex", flexDirection:"column", justifyContent:"flex-end" }}
-            onClick={e => { if(e.target===e.currentTarget) setShowAppearanceModal(false); }}>
-            <div className="modal-up" style={{ background:T.card, borderRadius:"28px 28px 0 0", paddingBottom:"0px", maxHeight:"90vh", overflowY:"auto" }}>
-              {/* Handle */}
-              <div style={{ width:36, height:4, background:T.cardBorder, borderRadius:99, margin:"12px auto 0" }}/>
-              {/* Header */}
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 20px 12px" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                  <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    {dark ? <Moon size={18} color={themeAccent} strokeWidth={2}/> : <Sun size={18} color={themeAccent} strokeWidth={2}/>}
-                  </div>
-                  <p style={{ fontSize:17, fontWeight:900, color:T.text }}>{L.appearance}</p>
-                </div>
-                <button onClick={() => setShowAppearanceModal(false)} style={{ background:T.catBg, border:"none", borderRadius:50, width:32, height:32, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <X size={16} color={T.textSub} strokeWidth={2.5}/>
-                </button>
-              </div>
-              <div style={{ padding:"0 20px 24px", display:"flex", flexDirection:"column", gap:0 }}>
-
-                {/* Dark mode toggle */}
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", borderBottom:`1px solid ${T.cardBorder}` }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      {dark ? <Moon size={18} color={themeAccent} strokeWidth={2}/> : <Sun size={18} color={themeAccent} strokeWidth={2}/>}
-                    </div>
-                    <div>
-                      <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.displayMode}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{dark ? L.darkActive : L.lightActive}</p>
-                    </div>
-                  </div>
-                  <div ref={settingsToggleRef} onClick={() => { if (!followSystem) toggleDark(settingsToggleRef); }}
-                    style={{ width:48, height:28, borderRadius:50, background: dark ? themePrimary : T.catBorder, cursor: followSystem ? "not-allowed" : "pointer", position:"relative", flexShrink:0, opacity: followSystem ? 0.4 : 1, transition:"opacity 0.2s" }}>
-                    <div style={{ position:"absolute", top:4, left: dark ? 24 : 4, width:20, height:20, borderRadius:50, background:"white", boxShadow:"0 2px 6px rgba(0,0,0,0.2)", transition:"left 0.2s" }}/>
-                  </div>
-                </div>
-
-                {/* Ikuti sistem */}
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"14px 0", borderBottom:`1px solid ${T.cardBorder}` }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <SunMoon size={18} color={T.primaryText} strokeWidth={2}/>
-                    </div>
-                    <div>
-                      <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.followSystem}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{followSystem ? L.followSystemDesc : L.manualMode}</p>
-                    </div>
-                  </div>
-                  <div onClick={() => {
-                    haptic();
-                    const next = !followSystem;
-                    setFollowSystem(next);
-                    try { localStorage.setItem("gm_follow_system", next ? "1" : "0"); } catch {}
-                    if (!next) { setDarkOverride(dark); try { localStorage.setItem("gm_dark_override", String(dark)); } catch {} }
-                    else { setDarkOverride(null); try { localStorage.removeItem("gm_dark_override"); } catch {} }
-                  }} style={{ width:48, height:28, borderRadius:50, background: followSystem ? themePrimary : T.catBorder, cursor:"pointer", position:"relative", flexShrink:0, transition:"width 0.5s cubic-bezier(0.4,0,0.2,1), min-width 0.5s cubic-bezier(0.4,0,0.2,1), padding 0.5s cubic-bezier(0.4,0,0.2,1), background 0.2s" }}>
-                    <div style={{ position:"absolute", top:4, left: followSystem ? 24 : 4, width:20, height:20, borderRadius:50, background:"white", boxShadow:"0 2px 6px rgba(0,0,0,0.2)", transition:"left 0.2s" }}/>
-                  </div>
-                </div>
-
-                {/* Bahasa */}
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", borderBottom:`1px solid ${T.cardBorder}` }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Globe size={18} color={T.primaryText} strokeWidth={2}/>
-                    </div>
-                    <div>
-                      <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.language}</p>
-                      <p style={{ fontSize:11, color:T.textSub }}>{L.languageDesc}</p>
-                    </div>
-                  </div>
-                  <div style={{ display:"flex", gap:6 }}>
-                    {[{code:"id", label:"ID"}, {code:"en", label:"EN"}].map(({code, label}) => (
-                      <button key={code} onClick={() => { haptic(); setLang(code); }}
-                        style={{ padding:"6px 12px", borderRadius:10, border:`1.5px solid ${lang===code ? (TP) : T.cardBorder}`, background: lang===code ? (TP)+"22" : T.catBg, color: lang===code ? (dark ? lighten(themePrimary,0.45) : T.primaryText) : T.textSub, fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tema Warna */}
-                <div style={{ padding:"14px 0" }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14 }}>
-                    <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Palette size={18} color={T.primaryText} strokeWidth={2}/>
-                    </div>
-                    <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.colorTheme}</p>
-                  </div>
-                  <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
-                    {THEME_PRESETS.filter(p => p.id !== "custom").map(preset => {
-                      const isSelected = themePresetId === preset.id;
-                      return (
-                        <button key={preset.id} onClick={() => { haptic(); triggerThemeChange(() => setThemePresetId(preset.id)); }}
-                          style={{ border: isSelected ? `2.5px solid ${preset.accent}` : `1.5px solid ${T.cardBorder}`, borderRadius:14, padding:"10px 6px", cursor:"pointer", background: isSelected ? `${preset.primary}22` : T.catBg, display:"flex", flexDirection:"column", alignItems:"center", gap:5 }}>
-                          <div style={{ display:"flex", gap:3 }}>
-                            <div style={{ width:14, height:14, borderRadius:4, background:preset.primary }}/>
-                            <div style={{ width:14, height:14, borderRadius:4, background:preset.accent }}/>
-                          </div>
-                          <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                            <PresetIcon name={preset.icon} size={11} color={isSelected ? preset.accent : T.textSub} strokeWidth={2.5}/>
-                            <span style={{ fontSize:11, fontWeight:700, color: isSelected ? preset.accent : T.textSub }}>{lang==="en" ? (preset.label) : (preset.labelId||preset.label)}</span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {/* Custom */}
-                  <div style={{ background:T.catBg, borderRadius:14, padding:12, border:`1.5px solid ${T.catBorder}` }}>
-                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
-                      <div style={{ display:"flex", alignItems:"center", gap:5 }}>
-                        <PaintbrushVertical size={12} color={T.primaryText} strokeWidth={2}/>
-                        <p style={{ fontSize:12, fontWeight:800, color:T.text }}>{lang==="en" ? "Custom" : "Kustom"}</p>
-                      </div>
-                      <button onClick={() => { haptic(); triggerThemeChange(() => setThemePresetId("custom")); }}
-                        style={{ background: themePresetId==="custom" ? themePrimary : T.btnG, color: themePresetId==="custom" ? "white" : T.btnGText, border:"none", borderRadius:8, padding:"5px 10px", cursor:"pointer", fontSize:11, fontWeight:700 }}>
-                        {themePresetId==="custom" ? <span style={{ display:"flex", alignItems:"center", gap:4 }}><CheckCircle size={12} strokeWidth={2.5}/> {L.active}</span> : L.use}
-                      </button>
-                    </div>
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-                      <div>
-                        <p style={{ fontSize:10, fontWeight:700, color:T.textSub, marginBottom:5 }}>{L.primaryLabel}</p>
-                        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                          <div style={{ width:28, height:28, borderRadius:8, background:customPrimary, border:`1.5px solid ${T.cardBorder}`, flexShrink:0 }}/>
-                          <input type="color" value={customPrimary} onChange={e => { triggerThemeChange(() => { setCustomPrimary(e.target.value); setThemePresetId("custom"); }); }} style={{ width:"100%", height:28, borderRadius:8, border:`1px solid ${T.inpBorder}`, cursor:"pointer", background:"transparent", padding:2 }}/>
-                        </div>
-                      </div>
-                      <div>
-                        <p style={{ fontSize:10, fontWeight:700, color:T.textSub, marginBottom:5 }}>{L.accentLabel}</p>
-                        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                          <div style={{ width:28, height:28, borderRadius:8, background:customAccent, border:`1.5px solid ${T.cardBorder}`, flexShrink:0 }}/>
-                          <input type="color" value={customAccent} onChange={e => { triggerThemeChange(() => { setCustomAccent(e.target.value); setThemePresetId("custom"); }); }} style={{ width:"100%", height:28, borderRadius:8, border:`1px solid ${T.inpBorder}`, cursor:"pointer", background:"transparent", padding:2 }}/>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
+        </>
         )}
 
         {/* ── NOTIFICATION MODAL ── */}
@@ -4604,7 +4365,7 @@ export default function App() {
                         <BadgeInfo size={18} color={weeklyNotif ? themeAccent : T.textSub} strokeWidth={2}/>
                       </div>
                       <div>
-                        <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Weekly Summary":"Ringkasan Mingguan"}</p>
+                        <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.weekSummary}</p>
                         <p style={{ fontSize:11, color:T.textSub }}>{weeklyNotif ? (lang==="en"?`Every ${["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][weeklyNotifDay]}`:["Min","Sen","Sel","Rab","Kam","Jum","Sab"][weeklyNotifDay]+" tiap minggu") : (lang==="en"?"Off":"Nonaktif")}</p>
                       </div>
                     </div>
@@ -4659,7 +4420,7 @@ export default function App() {
                     </div>
                     <div>
                       <p style={{ fontSize:15, fontWeight:900, color:"white", marginBottom:1 }}>{lang==="en"?"Monthly Budget":"Anggaran Bulanan"}</p>
-                      <p style={{ fontSize:11, color:"rgba(255,255,255,0.65)" }}>{lang==="en"?"Total spending cap per month":"Batas total pengeluaran per bulan"}</p>
+                      <p style={{ fontSize:11, color:"rgba(255,255,255,0.65)" }}>{L.totalSpendingCap}</p>
                     </div>
                   </div>
                   <button onClick={() => setShowOverallBudgetModal(false)}
@@ -4682,7 +4443,7 @@ export default function App() {
                             <div style={{ height:"100%", width:pct+"%", borderRadius:99, background: over?"#f87171":"rgba(255,255,255,0.8)", transition:"width 0.4s" }}/>
                           </div>
                           <p style={{ fontSize:11, color: over?"#fca5a5":"rgba(255,255,255,0.65)", marginTop:5, fontWeight:600 }}>
-                            {formatRp(spent)} {lang==="en"?"spent":"terpakai"} · {over ? (lang==="en"?"Over budget!":"Melebihi batas!") : (lang==="en"?"remaining":"sisa")+" "+formatRp(overallBudget-spent)}
+                            {formatRp(spent)} {L.spentLabel} · {over ? (lang==="en"?"Over budget!":"Melebihi batas!") : (lang==="en"?"remaining":"sisa")+" "+formatRp(overallBudget-spent)}
                           </p>
                         </div>
                       );
@@ -4707,14 +4468,14 @@ export default function App() {
                 />
                 <div style={{ display:"flex", gap:8 }}>
                   {overallBudget > 0 && (
-                    <button onClick={() => { setOverallBudget(0); setTempOverallBudget(0); setShowOverallBudgetModal(false); showToast(lang==="en"?"Budget removed":"Anggaran dihapus"); }}
+                    <button onClick={() => { setOverallBudget(0); setTempOverallBudget(0); setShowOverallBudgetModal(false); showToast(L.budgetRemoved); }}
                       style={{ flex:1, padding:"13px 0", borderRadius:14, background:dark?"rgba(239,68,68,0.15)":"#fef2f2", border:"1.5px solid "+dark?"rgba(239,68,68,0.3)":"#fecaca", color:"#f87171", fontSize:13, fontWeight:800, cursor:"pointer" }}>
-                      {lang==="en"?"Remove":"Hapus"}
+                      {L.removeLabel}
                     </button>
                   )}
                   <button onClick={() => { if(tempOverallBudget > 0){ setOverallBudget(tempOverallBudget); setShowOverallBudgetModal(false); showToast(lang==="en"?"Budget saved!":"Anggaran disimpan!"); haptic(); }}}
                     style={{ flex:2, padding:"13px 0", borderRadius:14, background: tempOverallBudget > 0 ? themePrimary : (dark?"rgba(255,255,255,0.08)":"#f3f4f6"), color: tempOverallBudget > 0 ? "white" : T.textSub, fontSize:13, fontWeight:800, cursor: tempOverallBudget > 0 ? "pointer":"default", border:"none", transition:"all 0.2s" }}>
-                    {lang==="en"?"Save Limit":"Simpan Batas"}
+                    {L.saveLimitBtn}
                   </button>
                 </div>
               </div>
@@ -4725,13 +4486,13 @@ export default function App() {
         {/* ── ADD TRANSACTION MODAL (float center) ── */}
         {showForm && (
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", backdropFilter:"blur(6px)", WebkitBackdropFilter:"blur(6px)", zIndex:300, display:"flex", alignItems:"flex-end", justifyContent:"center", boxSizing:"border-box" }}
-            onClick={e => { if (e.target===e.currentTarget) { setShowForm(false); setEditItem(null); } }}>
+            onClick={e => { if (e.target===e.currentTarget) { closeFormSafe(); } }}>
             <div className="modal-float" style={{ background:T.modalBg, borderRadius:"24px 24px 0 0", width:"100%", maxWidth:400, boxShadow: dark ? "0 24px 60px rgba(0,0,0,0.8)" : "0 12px 40px rgba(0,0,0,0.2)", overflow:"hidden", maxHeight: kbHeight > 0 ? `calc(100dvh - ${kbHeight}px - env(safe-area-inset-top))` : "88dvh", display:"flex", flexDirection:"column", marginBottom: kbHeight > 0 ? kbHeight : 0, transition:"margin-bottom 0.25s ease, max-height 0.25s ease" }}>
 
               {/* Header strip */}
               <div style={{ background:`linear-gradient(135deg,${themePrimary},${darken(themePrimary,0.25)})`, padding:"14px 16px 12px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                 <p style={{ fontSize:14, fontWeight:900, color:"white" }}>{editItem ? L.editTx : L.newTx}</p>
-                <button onClick={() => { setShowForm(false); setEditItem(null); }}
+                <button onClick={() => { closeFormSafe(); }}
                   style={{ width:26, height:26, borderRadius:50, background:"rgba(0,0,0,0.2)", border:"none", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
                   <X size={12} color="white" strokeWidth={2.5}/>
                 </button>
@@ -4823,7 +4584,7 @@ export default function App() {
                       {/* Foto dari kamera */}
                       <label style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", gap:7, padding:"10px 14px", borderRadius:12, border:`1.5px dashed ${T.cardBorder}`, cursor:"pointer", background:T.catBg }}>
                         <Camera size={14} color={T.textSub} strokeWidth={2}/>
-                        <span style={{ fontSize:12, color:T.textSub, fontWeight:600 }}>{lang==="en"?"Camera":"Kamera"}</span>
+                        <span style={{ fontSize:12, color:T.textSub, fontWeight:600 }}>{L.cameraLabel}</span>
                         <input type="file" accept="image/*" capture="environment" style={{ display:"none" }} onChange={e => {
                           const file = e.target.files?.[0]; if (!file) return;
                           const reader = new FileReader();
@@ -4834,7 +4595,7 @@ export default function App() {
                       {/* Upload dari galeri/file */}
                       <label style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", gap:7, padding:"10px 14px", borderRadius:12, border:`1.5px dashed ${T.cardBorder}`, cursor:"pointer", background:T.catBg }}>
                         <ImagePlus size={14} color={T.textSub} strokeWidth={2}/>
-                        <span style={{ fontSize:12, color:T.textSub, fontWeight:600 }}>{lang==="en"?"Upload":"Unggah"}</span>
+                        <span style={{ fontSize:12, color:T.textSub, fontWeight:600 }}>{L.uploadLabel}</span>
                         <input type="file" accept="image/*,application/pdf" style={{ display:"none" }} onChange={e => {
                           const file = e.target.files?.[0]; if (!file) return;
                           const reader = new FileReader();
@@ -4854,7 +4615,7 @@ export default function App() {
                     {editItem ? L.save : `+ ${L.add}`}
                   </button>
                   <button className="btn-g" style={{ flex:0.4, background:T.btnG, color:T.btnGText, border:`1.5px solid ${T.btnGBorder}`, fontSize:13, padding:"12px 0" }}
-                    onClick={() => { setShowForm(false); setEditItem(null); }}>{L.cancel}</button>
+                    onClick={() => { closeFormSafe(); }}>{L.cancel}</button>
                 </div>
               </div>
             </div>
@@ -4883,7 +4644,7 @@ export default function App() {
                 a.download = `meowlett-${currentMonth}.png`;
                 a.href = canvas.toDataURL("image/png");
                 a.click();
-                showToast("ok:"+(lang==="en"?"Image downloaded!":"Gambar berhasil diunduh!"));
+                showToast(L.imageDownloaded);
               });
             } else {
               // Fallback: load html2canvas then retry
@@ -4895,7 +4656,7 @@ export default function App() {
                   a.download = `meowlett-${currentMonth}.png`;
                   a.href = canvas.toDataURL("image/png");
                   a.click();
-                  showToast("ok:"+(lang==="en"?"Image downloaded!":"Gambar berhasil diunduh!"));
+                  showToast(L.imageDownloaded);
                 });
               };
               document.head.appendChild(s);
@@ -4922,7 +4683,7 @@ export default function App() {
                       <p style={{ fontSize:14, fontWeight:800, color:"white" }}>{bulanStr}</p>
                     </div>
                     <div style={{ background:"rgba(255,255,255,0.1)", borderRadius:12, padding:"6px 12px" }}>
-                      <p style={{ fontSize:11, fontWeight:700, color:"rgba(255,255,255,0.8)" }}>{pct}% {lang==="en"?"used":"terpakai"}</p>
+                      <p style={{ fontSize:11, fontWeight:700, color:"rgba(255,255,255,0.8)" }}>{pct}% {L.usedLabel}</p>
                     </div>
                   </div>
 
@@ -4939,7 +4700,7 @@ export default function App() {
                   {/* Top categories */}
                   {topCats.length > 0 && (
                     <div style={{ position:"relative" }}>
-                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.4)", fontWeight:700, letterSpacing:1, marginBottom:10 }}>{lang==="en"?"TOP CATEGORIES":"KATEGORI TERBESAR"}</p>
+                      <p style={{ fontSize:10, color:"rgba(255,255,255,0.4)", fontWeight:700, letterSpacing:1, marginBottom:10 }}>{L.topCategories}</p>
                       <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                         {topCats.map(([key, amt]) => {
                           const cat = getCategory(key);
@@ -4959,7 +4720,7 @@ export default function App() {
 
                   {/* Sisa */}
                   <div style={{ marginTop:20, paddingTop:16, borderTop:"1px solid rgba(255,255,255,0.1)", display:"flex", justifyContent:"space-between", alignItems:"center", position:"relative" }}>
-                    <span style={{ fontSize:12, color:"rgba(255,255,255,0.5)", fontWeight:600 }}>{lang==="en"?"Remaining":"Sisa"}</span>
+                    <span style={{ fontSize:12, color:"rgba(255,255,255,0.5)", fontWeight:600 }}>{L.remaining}</span>
                     <span style={{ fontSize:15, fontWeight:900, color: sisa >= 0 ? "rgba(255,255,255,0.9)" : "#f87171" }}>{sisa >= 0 ? formatRp(sisa) : `-${formatRp(Math.abs(sisa))}`}</span>
                   </div>
                 </div>
@@ -4972,11 +4733,11 @@ export default function App() {
                   </button>
                   <button onClick={handleDownload}
                     style={{ flex:2, padding:"12px", borderRadius:14, border:"none", background:`linear-gradient(135deg,${themeAccent},${themePrimary})`, color:"white", fontSize:13, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
-                    <Download size={15} strokeWidth={2}/> {lang==="en"?"Download Image":"Unduh Gambar"}
+                    <Download size={15} strokeWidth={2}/> {L.downloadImage}
                   </button>
                 </div>
                 <p style={{ textAlign:"center", fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:10 }}>
-                  {lang==="en"?"Tap outside to close":"Tap di luar untuk tutup"}
+                  {L.tapOutsideClose}
                 </p>
               </div>
             </div>
@@ -4994,7 +4755,7 @@ export default function App() {
                   <Book size={18} color={themeAccent} strokeWidth={2}/>
                 </div>
                 <div>
-                  <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{lang==="en"?"Daily Note":"Catatan Harian"}</p>
+                  <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{L.dailyNote}</p>
                   <p style={{ fontSize:11, color:T.textSub }}>{new Date().toLocaleDateString(lang==="en"?"en-GB":"id-ID",{weekday:"long",day:"numeric",month:"long"})}</p>
                 </div>
               </div>
@@ -5033,7 +4794,7 @@ export default function App() {
         )}
 
         {showCicilanModal && <CicilanModal show={showCicilanModal} onClose={()=>setShowCicilanModal(false)} cicilan={cicilan} setCicilan={setCicilan} lang={lang} L={L} T={T} themeAccent={themeAccent} themePrimary={themePrimary} formatRp={formatRp} parseRpInput={parseRpInput} haptic={haptic} showToast={showToast}/>}
-        {showSplitBills && <SplitBillsModal show={showSplitBills} onClose={()=>setShowSplitBills(false)} splitBills={splitBills} setSplitBills={setSplitBills} T={T} themeAccent={themeAccent} themePrimary={themePrimary} dark={dark} lang={lang} formatRp={formatRp} parseRpInput={parseRpInput} haptic={haptic} showToast={showToast}/>}
+        {showSplitBills && <SplitBillsModal show={showSplitBills} onClose={()=>setShowSplitBills(false)} splitBills={splitBills} setSplitBills={setSplitBills} T={T} themeAccent={themeAccent} themePrimary={themePrimary} dark={dark} lang={lang} L={L} formatRp={formatRp} parseRpInput={parseRpInput} haptic={haptic} showToast={showToast}/>}
 
         {showReminderModal && <ReminderModal
           show={showReminderModal} onClose={()=>setShowReminderModal(false)}
@@ -5117,4 +4878,3 @@ export default function App() {
     </div>
   );
 }
-
