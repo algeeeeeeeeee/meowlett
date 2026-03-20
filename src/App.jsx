@@ -1303,6 +1303,21 @@ export default function App() {
     return insights.slice(0, 4);
   }, [transactions, currentMonth, prevMonth, categories]);
 
+  // ── Streak: track daily app opens ──────────────────────────────
+  const [streak, setStreak] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("gm_streak") || '{"count":0,"lastDate":""}'); }
+    catch { return { count: 0, lastDate: "" }; }
+  });
+  useEffect(() => {
+    const todayStr = today();
+    if (streak.lastDate === todayStr) return;
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+    const newCount = streak.lastDate === yesterday ? streak.count + 1 : 1;
+    const newStreak = { count: newCount, lastDate: todayStr };
+    setStreak(newStreak);
+    try { localStorage.setItem("gm_streak", JSON.stringify(newStreak)); } catch {}
+  }, []);
+
   // ── Financial Health Score ───────────────────────────────────────────────────
   const healthScore = useMemo(() => {
     let score = 0;
@@ -1396,21 +1411,6 @@ export default function App() {
     const avgExp = nonZero.reduce((a,b)=>a+b,0)/nonZero.length;
     return Math.max(0, income - avgExp);
   }, [transactions, income]);
-
-  // ── Streak: track daily app opens ──────────────────────────────
-  const [streak, setStreak] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("gm_streak") || '{"count":0,"lastDate":""}'); }
-    catch { return { count: 0, lastDate: "" }; }
-  });
-  useEffect(() => {
-    const todayStr = today();
-    if (streak.lastDate === todayStr) return;
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
-    const newCount = streak.lastDate === yesterday ? streak.count + 1 : 1;
-    const newStreak = { count: newCount, lastDate: todayStr };
-    setStreak(newStreak);
-    try { localStorage.setItem("gm_streak", JSON.stringify(newStreak)); } catch {}
-  }, []);
 
   // ── Weekly insight ──────────────────────────────────────────────
   const weeklyInsight = useMemo(() => {
@@ -2345,7 +2345,7 @@ export default function App() {
                   <p style={{ fontSize:12, fontWeight:800, color:T.textSub, letterSpacing:0.5 }}>{lang==="en"?"TODAY'S NOTE":"CATATAN HARI INI"}</p>
                 </div>
                 <button onClick={() => { setDailyNoteInput(dailyNotes[todayStr] || ""); setShowDailyNote(true); }}
-                  style={{ fontSize:11, fontWeight:700, color:themeAccent, background:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:8, background:`${themeAccent}15` }}>
+                  style={{ fontSize:11, fontWeight:700, color:themeAccent, border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:8, background:`${themeAccent}15` }}>
                   {dailyNotes[todayStr] ? (lang==="en"?"Edit":"Ubah") : (lang==="en"?"+ Add":"+ Tulis")}
                 </button>
               </div>
