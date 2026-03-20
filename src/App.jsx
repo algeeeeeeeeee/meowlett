@@ -13,7 +13,8 @@ import {
   ArrowRight, Banknote, Download, Bell, BellOff, X, Camera, Settings,
   WifiOff, Repeat, AlertCircle, Sparkles, Flame, Wind, Zap, Smartphone, Laptop, ChevronDown, ChevronRight, Target, Save, Upload, Share2, Calculator2,
   CreditCard, ImagePlus, Image, ZoomIn, AlarmClock, BellRing, CheckCheck, Tag, Tags,
-  Users, UserPlus, Equal, Receipt
+  Users, UserPlus, Equal, Receipt,
+  HeartPulse, Rocket, Flag, Ban, DiamondPlus, SunMoon, Globe, PaintRoller, Grape, BadgeInfo, Cat, HandCoins
 } from "./icons.jsx";
 import { formatRp, today, getWeek, getMonth, fmtDate, groupByDate, dateLabel, getCatLabel, haptic, parseRpInput, rpInputProps } from "./utils/helpers.js";
 import { darken, lighten, getLuminance, getContrastText, buildTheme } from "./utils/theme.js";
@@ -2683,7 +2684,7 @@ export default function App() {
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:healthScore.color+"22", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <Zap size={14} color={healthScore.color} strokeWidth={2.5}/>
+                    <HeartPulse size={14} color={healthScore.color} strokeWidth={2.5}/>
                   </div>
                   <p style={{ fontSize:12, fontWeight:800, color:T.textSub, letterSpacing:0.5 }}>{lang==="en"?"FINANCIAL HEALTH":"KESEHATAN FINANSIAL"}</p>
                 </div>
@@ -2862,7 +2863,7 @@ export default function App() {
                 <div style={{ textAlign:"center", padding:"24px 0 8px" }}>
                   <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                     <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <PiggyBank size={36} color={T.accentText} strokeWidth={1.5}/>
+                      <Rocket size={36} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:14, fontWeight:700, color:T.text, marginBottom:4 }}>{L.noGoal}</p>
@@ -2997,7 +2998,7 @@ export default function App() {
                 <div style={{ textAlign:"center", padding:"28px 16px" }}>
                   <div style={{ marginBottom:14, display:"flex", justifyContent:"center" }}>
                     <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Inbox size={32} color={T.accentText} strokeWidth={1.5}/>
+                      <HandCoins size={32} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:15, fontWeight:900, color:T.text, marginBottom:6 }}>{L.noTx}</p>
@@ -3108,7 +3109,7 @@ export default function App() {
                   <React.Fragment>
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
                       <div style={{ width:88, height:88, borderRadius:26, background:`${themeAccent}14`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Inbox size={38} color={themeAccent} strokeWidth={1.5}/>
+                        <Flag size={38} color={themeAccent} strokeWidth={1.5}/>
                       </div>
                     </div>
                     <p style={{ fontSize:18,fontWeight:900,color:T.text,marginBottom:8 }}>{lang==="en"?"No transactions yet":"Belum ada transaksi"}</p>
@@ -3378,7 +3379,7 @@ export default function App() {
                 <div className="card" style={{ padding:"28px 20px", textAlign:"center", border:"1px solid #4ade8022" }}>
                   <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                     <div style={{ width:60, height:60, borderRadius:"50%", background:"#4ade8022", border:"1.5px solid #4ade8030", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <TrendingUp size={26} color="#4ade80" strokeWidth={1.5}/>
+                      <DiamondPlus size={26} color="#4ade80" strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:13, color:"#4ade80", opacity:0.7 }}>{lang==="en"?"No recurring income yet":"Belum ada pemasukan rutin"}</p>
@@ -3390,7 +3391,7 @@ export default function App() {
                     return (
                       <div key={r.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"13px 14px", borderBottom: idx < recurringIncome.length-1 ? "1px solid #4ade8022" : "none" }}>
                         <div style={{ width:40, height:40, borderRadius:12, background:"#4ade8025", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                          <TrendingUp size={20} color="#4ade80" strokeWidth={2}/>
+                          <DiamondPlus size={20} color="#4ade80" strokeWidth={2}/>
                         </div>
                         <div style={{ flex:1, minWidth:0 }}>
                           <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{r.description}</p>
@@ -3770,7 +3771,7 @@ export default function App() {
               <div className="card" style={{ padding:40, textAlign:"center", ...CSN }}>
                 <div style={{ display:"flex", justifyContent:"center", marginBottom:10 }}>
                   <div style={{ width:60, height:60, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <Inbox size={28} color={T.accentText} strokeWidth={1.5}/>
+                    <Ban size={28} color={T.accentText} strokeWidth={1.5}/>
                   </div>
                 </div>
                 <p style={{ color:T.textSub, fontSize:14 }}>{L.noTxDate}</p>
@@ -4459,7 +4460,7 @@ export default function App() {
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"14px 0", borderBottom:`1px solid ${T.cardBorder}` }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Monitor size={18} color={T.primaryText} strokeWidth={2}/>
+                      <SunMoon size={18} color={T.primaryText} strokeWidth={2}/>
                     </div>
                     <div>
                       <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.followSystem}</p>
@@ -4482,7 +4483,7 @@ export default function App() {
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", borderBottom:`1px solid ${T.cardBorder}` }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Monitor size={18} color={T.primaryText} strokeWidth={2}/>
+                      <Globe size={18} color={T.primaryText} strokeWidth={2}/>
                     </div>
                     <div>
                       <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.language}</p>
@@ -4599,7 +4600,7 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                     <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                       <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <BarChart2 size={18} color={weeklyNotif ? themeAccent : T.textSub} strokeWidth={2}/>
+                        <BadgeInfo size={18} color={weeklyNotif ? themeAccent : T.textSub} strokeWidth={2}/>
                       </div>
                       <div>
                         <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Weekly Summary":"Ringkasan Mingguan"}</p>
@@ -4626,7 +4627,7 @@ export default function App() {
                   style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", borderTop:`1px solid ${T.cardBorder}`, cursor:"pointer", marginTop: weeklyNotif ? 0 : 0 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:36, height:36, borderRadius:12, background:T.catBg, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Bell size={18} color={themeAccent} strokeWidth={2}/>
+                      <BellRing size={18} color={themeAccent} strokeWidth={2}/>
                     </div>
                     <div>
                       <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{L.reminderTitle}</p>
@@ -5048,7 +5049,7 @@ export default function App() {
         {(() => {
           const NI = ({ id, size=22, color }) => {
             const s = { fill:"none", stroke:color, strokeWidth:1.5, strokeLinecap:"round", strokeLinejoin:"round" };
-            if (id==="dashboard") return <svg width={size} height={size} viewBox="0 0 24 24" {...s}><path d="M4 11L12 4L20 11V20C20 20.55 19.55 21 19 21H5C4.45 21 4 20.55 4 20Z"/></svg>;
+            if (id==="dashboard") return <Cat width={size} height={size} color={color} strokeWidth={1.5}/>;
             if (id==="transactions") return <svg width={size} height={size} viewBox="0 0 24 24" {...s}><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="17" y2="12"/><line x1="3" y1="18" x2="13" y2="18"/></svg>;
             if (id==="report") return <svg width={size} height={size} viewBox="0 0 24 24" {...s}><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
             if (id==="date") return <svg width={size} height={size} viewBox="0 0 24 24" {...s}><path d="M12 21C12 21 3 15 3 8.5C3 5.46 5.46 3 8.5 3C10.2 3 11.72 3.88 12 5C12.28 3.88 13.8 3 15.5 3C18.54 3 21 5.46 21 8.5C21 15 12 21 12 21Z"/></svg>;
