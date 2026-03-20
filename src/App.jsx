@@ -2053,7 +2053,7 @@ export default function App() {
 
                 {/* Color presets */}
                 <p style={{ fontSize:10, fontWeight:800, color:T.textMuted, letterSpacing:1, marginBottom:8 }}>{lang==="en" ? "COLOR THEME" : "TEMA WARNA"}</p>
-                <div style={{ display:"flex", gap:10, marginBottom:14, flexWrap:"wrap" }}>
+                <div style={{ display:"flex", gap:12, marginBottom:12, flexWrap:"wrap" }}>
                   {THEME_PRESETS.filter(p => p.id !== "custom").map(preset => (
                     <button key={preset.id} onClick={() => { setThemePresetId(preset.id); try { localStorage.setItem("gm_theme_preset", preset.id); } catch {} }}
                       style={{ width:44, height:44, borderRadius:"50%", border: themePresetId===preset.id ? `3px solid ${preset.accent}` : "3px solid transparent", background:preset.primary, cursor:"pointer", padding:0, boxShadow: themePresetId===preset.id ? `0 0 0 2px ${preset.accent}55` : "none", transition:"all 0.2s", outline:"none" }}>
@@ -2557,7 +2557,7 @@ export default function App() {
             })()}
 
             {/* ── Streak + Weekly Insight ── */}
-            <div style={{ display:"flex", gap:10, marginBottom:14 }}>
+            <div style={{ display:"flex", gap:12, marginBottom:12 }}>
               {/* Streak card */}
               <div className="card" style={{ flex:1, padding:"14px 14px", ...CS, display:"flex", flexDirection:"column", gap:4 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
@@ -2641,7 +2641,7 @@ export default function App() {
 
             {/* End-of-month prediction card */}
             {/* ── Financial Health Score card ── */}
-            <div className="card" style={{ padding:"14px 16px", marginBottom:14, ...CS }}>
+            <div className="card" style={{ padding:"14px 16px", marginBottom:12, ...CS }}>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:healthScore.color+"22", display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -2681,7 +2681,7 @@ export default function App() {
 
 
             {monthPrediction && income > 0 && (
-              <div className="card" style={{ padding:"14px 16px", marginBottom:14, ...CS, display:"flex", alignItems:"center", gap:12 }}>
+              <div className="card" style={{ padding:"14px 16px", marginBottom:12, ...CS, display:"flex", alignItems:"center", gap:12 }}>
                 <div style={{ width:36, height:36, borderRadius:12, background: monthPrediction.predicted > income ? "#f87171" + "22" : themeAccent+"22", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
                   <TrendingUp size={16} color={monthPrediction.predicted > income ? "#f87171" : themeAccent} strokeWidth={2.2}/>
                 </div>
@@ -2706,7 +2706,7 @@ export default function App() {
               const allCatKeys = Object.keys(categories);
               // Empty state CTA
               if (budgetEntries.length === 0 && !overallBudget) return (
-                <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
+                <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:44, height:44, borderRadius:14, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
                       <Wallet size={20} color={TP} strokeWidth={2}/>
@@ -2722,7 +2722,7 @@ export default function App() {
                 </div>
               );
               return (
-                <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
+                <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                       <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -2796,7 +2796,7 @@ export default function App() {
             })()}
 
             {/* Savings Goals Card */}
-            <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
+            <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -2935,7 +2935,7 @@ export default function App() {
             </div>
 
             {/* Recent transactions */}
-            <div className="card" style={{ padding:16, marginBottom:14, ...CS }}>
+            <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -2984,7 +2984,7 @@ export default function App() {
             </div>
 
             {/* Donut Chart */}
-            <div className="card" style={{ padding:16, marginBottom:14, ...CS }}>
+            <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
               <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}><div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}><BarChart2 size={13} strokeWidth={2} color={TP}/></div><p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.breakdownCat}</p></div>
               {catBreakdown.length === 0 ? (
                 <div style={{ textAlign:"center", padding:"40px 20px" }}>
@@ -3170,7 +3170,7 @@ export default function App() {
                 );
               })()}
 
-              {showRecurPanel && <div className="card" style={{ padding:16, marginBottom:10, ...CS }}>
+              {showRecurPanel && <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
                 <p style={{ fontSize:13, fontWeight:800, color:T.text, marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
                   <Repeat size={15} color={themeAccent} strokeWidth={2}/> {L.addRecurring}
                 </p>
@@ -3836,7 +3836,7 @@ export default function App() {
             <div style={{ padding:"14px 16px 0", paddingTop:`${headerHeight + 16}px`, paddingBottom:"16px" }}>
 
             {/* Budget Date card */}
-            <div className="card" style={{ padding:"24px 24px 20px", marginTop:0, marginBottom:14, background: dark?"#1a0d14":"linear-gradient(135deg,#fdf2f8,#fce7f3)", border: dark?"1px solid #3d1a2e":"1px solid #f9a8d4" }}>
+            <div className="card" style={{ padding:"24px 24px 20px", marginTop:0, marginBottom:12, background: dark?"#1a0d14":"linear-gradient(135deg,#fdf2f8,#fce7f3)", border: dark?"1px solid #3d1a2e":"1px solid #f9a8d4" }}>
               <p style={{ fontSize:11, fontWeight:700, color: dark?"#f9a8d4":"#9d174d", letterSpacing:1 }}>{L.dateBudgetTitle}</p>
               <p style={{ fontSize:32, fontWeight:900, color: dark?"#f472b6":"#be185d", margin:"6px 0" }}>{formatRp(dateExpense)}</p>
               <p style={{ fontSize:12, color: dark?"#f9a8d4":"#9d174d", opacity:0.8 }}>
@@ -3845,7 +3845,7 @@ export default function App() {
             </div>
 
             {/* Wishlist Date */}
-            <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
+            <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:"rgba(244,114,182,0.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -3904,7 +3904,7 @@ export default function App() {
             )}
 
             {/* Catat Pengeluaran Date */}
-            <div className="card" style={{ padding:"16px 18px", marginBottom:14, ...CS }}>
+            <div className="card" style={{ padding:"16px 18px", marginBottom:12, ...CS }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:"rgba(244,114,182,0.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
