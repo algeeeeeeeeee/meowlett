@@ -2772,7 +2772,7 @@ export default function App() {
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                       <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Wallet size={13} color={TP} strokeWidth={2.5}/>
+                        <SlidersHorizontal size={13} color={TP} strokeWidth={2.5}/>
                       </div>
                       <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.monthlyBudget}</p>
                     </div>
@@ -2985,7 +2985,7 @@ export default function App() {
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                   <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <Wallet size={13} color={TP} strokeWidth={2.5}/>
+                    <Receipt size={13} color={TP} strokeWidth={2.5}/>
                   </div>
                   <p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.recentTx}</p>
                 </div>
@@ -2997,7 +2997,7 @@ export default function App() {
                 <div style={{ textAlign:"center", padding:"28px 16px" }}>
                   <div style={{ marginBottom:14, display:"flex", justifyContent:"center" }}>
                     <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <Wallet size={32} color={T.accentText} strokeWidth={1.5}/>
+                      <Inbox size={32} color={T.accentText} strokeWidth={1.5}/>
                     </div>
                   </div>
                   <p style={{ fontSize:15, fontWeight:900, color:T.text, marginBottom:6 }}>{L.noTx}</p>
@@ -3031,12 +3031,12 @@ export default function App() {
 
             {/* Donut Chart */}
             <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
-              <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}><div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}><BarChart2 size={13} strokeWidth={2} color={TP}/></div><p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.breakdownCat}</p></div>
+              <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}><div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}><ChartPie size={13} strokeWidth={2} color={TP}/></div><p style={{ fontSize:14, fontWeight:800, color:T.text }}>{L.breakdownCat}</p></div>
               {catBreakdown.length === 0 ? (
                 <div style={{ textAlign:"center", padding:"40px 20px" }}>
                 <div style={{ display:"flex", justifyContent:"center", marginBottom:14 }}>
                   <div style={{ width:72, height:72, borderRadius:"50%", background:`linear-gradient(135deg,${themeAccent}22,${themePrimary}18)`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <BarChart2 size={32} color={T.accentText} strokeWidth={1.5}/>
+                    <ChartPie size={32} color={T.accentText} strokeWidth={1.5}/>
                   </div>
                 </div>
                 <p style={{ fontSize:16, fontWeight:800, color:T.text, marginBottom:8 }}>{L.noData}</p>
@@ -3108,7 +3108,7 @@ export default function App() {
                   <React.Fragment>
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
                       <div style={{ width:88, height:88, borderRadius:26, background:`${themeAccent}14`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Wallet size={38} color={themeAccent} strokeWidth={1.5}/>
+                        <Inbox size={38} color={themeAccent} strokeWidth={1.5}/>
                       </div>
                     </div>
                     <p style={{ fontSize:18,fontWeight:900,color:T.text,marginBottom:8 }}>{lang==="en"?"No transactions yet":"Belum ada transaksi"}</p>
@@ -3465,7 +3465,7 @@ export default function App() {
                 <div className="card" style={{ padding:16, marginBottom:12, ...CS }}>
                   <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:4 }}>
                     <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <BarChart2 size={13} strokeWidth={2} color={TP}/>
+                      <LayoutList size={13} strokeWidth={2} color={TP}/>
                     </div>
                     <p style={{ fontSize:13, fontWeight:800, color:T.text }}>{lang==="en"?"Per Category — This vs Last Month":"Per Kategori — Bulan Ini vs Lalu"}</p>
                   </div>
@@ -3528,7 +3528,7 @@ export default function App() {
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:7 }}>
                     <div style={{ width:28, height:28, borderRadius:9, background:`${TP}18`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <TrendingUp size={13} strokeWidth={2} color={TP}/>
+                      <BarChart2 size={13} strokeWidth={2} color={TP}/>
                     </div>
                     <p style={{ fontSize:13, fontWeight:800, color:T.text }}>{lang==="en"?"Category Trend (4 months)":"Tren Kategori (4 bulan)"}</p>
                   </div>
@@ -4208,7 +4208,7 @@ export default function App() {
                   style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0", width:"100%", ...IBN, fontFamily:"inherit", borderBottom:`1px solid ${T.cardBorder}` }}>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:36, height:36, borderRadius:10, background:`${themeAccent}18`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                      <Wallet size={18} strokeWidth={2} color={T.accentText}/>
+                      <BadgeDollarSign size={18} strokeWidth={2} color={T.accentText}/>
                     </div>
                     <div style={{ textAlign:"left" }}>
                       <p style={{ fontSize:14, fontWeight:700, color:T.text }}>{lang==="en"?"Spending Limits":"Batas Pengeluaran"}</p>
