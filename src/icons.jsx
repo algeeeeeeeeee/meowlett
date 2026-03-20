@@ -16,11 +16,10 @@ import {
 } from 'lucide-react';
 
 // House and ChartPie renamed/missing in some versions — safe dynamic fallback
-let _House, _ChartPie, _PaintbrushVertical;
-try { const m = require('lucide-react'); _House = m.House; _ChartPie = m.ChartPie; _PaintbrushVertical = m.PaintbrushVertical; } catch {}
-const House   = _House   || Home;
+let _House, _ChartPie;
+try { const m = require('lucide-react'); _House = m.House; _ChartPie = m.ChartPie; } catch {}
+const House    = _House    || Home;
 const ChartPie = _ChartPie || BarChart2;
-const PaintbrushVertical = _PaintbrushVertical || Palette;
 
 // Inline SVG fallbacks for icons not available in lucide-react 0.383.0
 export const SunMoon = ({ size = 24, color = 'currentColor', strokeWidth = 2, ...props }) => (
@@ -38,6 +37,15 @@ export const CirclePlus = ({ size = 24, color = 'currentColor', strokeWidth = 2,
     <circle cx="12" cy="12" r="10"/>
     <path d="M8 12h8"/>
     <path d="M12 8v8"/>
+  </svg>
+);
+
+export const PaintbrushVertical = ({ size = 24, color = 'currentColor', strokeWidth = 2, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M10 2v2"/>
+    <path d="M14 2v4"/>
+    <path d="M17 2a1 1 0 0 1 1 1v9H6V3a1 1 0 0 1 1-1z"/>
+    <path d="M6 12a1 1 0 0 0-1 1v1a2 2 0 0 0 2 2h2a1 1 0 0 1 1 1v2.9a2 2 0 1 0 4 0V17a1 1 0 0 1 1-1h2a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1"/>
   </svg>
 );
 
@@ -72,7 +80,7 @@ export {
   CircleDollarSign, Clock, Coffee, Coins, CreditCard, DollarSign, Download,
   Droplets, Dumbbell, Equal, FileText, Film, Flag, Flame, Flower2, Gamepad2, Gift,
   Globe, Grape, HandCoins, Hash, Heart, HeartPulse, Home, House, Image, ImagePlus, Inbox, Laptop,
-  LayoutList, Leaf, List, Monitor, Moon, Music, Package, PaintRoller, PaintbrushVertical, Palette, PawPrint,
+  LayoutList, Leaf, List, Monitor, Moon, Music, Package, PaintRoller, Palette, PawPrint,
   Pencil, PiggyBank, Pill, Pizza, Plane, Plus, Receipt, RefreshCw, Repeat, Rocket, Save,
   Search, Settings, Share2, Shirt, ShoppingBag, SlidersHorizontal, Smartphone, Sparkles,
   Sun, Tag, Tags, Target, Trash2, TrendingUp, Umbrella, Upload, User, UserPlus,
