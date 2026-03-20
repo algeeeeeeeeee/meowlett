@@ -2345,7 +2345,7 @@ export default function App() {
                   <p style={{ fontSize:12, fontWeight:800, color:T.textSub, letterSpacing:0.5 }}>{lang==="en"?"TODAY'S NOTE":"CATATAN HARI INI"}</p>
                 </div>
                 <button onClick={() => { setDailyNoteInput(dailyNotes[todayStr] || ""); setShowDailyNote(true); }}
-                  style={{ fontSize:11, fontWeight:700, color:themeAccent, border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:8, background:`${themeAccent}15` }}>
+                  style={{ fontSize:11, fontWeight:700, color:themeAccent, background:"none", border:"none", cursor:"pointer", padding:"4px 8px", borderRadius:8, background:`${themeAccent}15` }}>
                   {dailyNotes[todayStr] ? (lang==="en"?"Edit":"Ubah") : (lang==="en"?"+ Add":"+ Tulis")}
                 </button>
               </div>
