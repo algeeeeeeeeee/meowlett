@@ -7,12 +7,12 @@ import {
   Coins, CreditCard, DiamondPlus, DollarSign, Download, Droplets, Dumbbell, Equal, FileText,
   Film, Flag, Flame, Flower2, Gamepad2, Gift, Globe, Grape, HandCoins, Hash, Heart, HeartPulse, Home,
   Image, ImagePlus, Inbox, Laptop, LayoutList, Leaf, List, Monitor,
-  Moon, Music, Package, PaintRoller, Palette, PawPrint, Pencil, PiggyBank, Pill,
+  Moon, Music, Package, PaintbrushVertical, PaintRoller, Palette, PawPrint, Pencil, PiggyBank, Pill,
   Pizza, Plane, Plus, Receipt, RefreshCw, Repeat, Rocket, Save, Search,
   Settings, Share2, Shirt, ShoppingBag, SlidersHorizontal, Smartphone, Sparkles, Sun, SunMoon,
   Tag, Tags, Target, Trash2, TrendingUp, Umbrella, Upload, User,
-  UserPlus, Users, Utensils, Wallet, WifiOff, Wind, Wrench, X,
-  Zap, ZoomIn
+  UserPlus, Users, Utensils, Wallet, Waves, WifiOff, Wind, Wrench, X,
+  Zap, ZoomIn, Citrus, MessageCircle, CirclePlus
 } from 'lucide-react';
 
 // House and ChartPie renamed/missing in some versions — safe dynamic fallback
@@ -33,7 +33,8 @@ export {
   Pencil, PiggyBank, Pill, Pizza, Plane, Plus, Receipt, RefreshCw, Repeat, Rocket, Save,
   Search, Settings, Share2, Shirt, ShoppingBag, SlidersHorizontal, Smartphone, Sparkles,
   Sun, SunMoon, Tag, Tags, Target, Trash2, TrendingUp, Umbrella, Upload, User, UserPlus,
-  Users, Utensils, Wallet, WifiOff, Wind, Wrench, X, Zap, ZoomIn
+  Users, Utensils, Wallet, Waves, WifiOff, Wind, Wrench, X, Zap, ZoomIn,
+  Citrus, MessageCircle, CirclePlus, PaintbrushVertical
 };
 
 // Aliases used in App.jsx
