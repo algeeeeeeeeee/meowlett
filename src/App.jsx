@@ -248,7 +248,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
 
   const del = (id) => {
     setSplitBills(p => p.filter(x => x.id !== id));
-    showToast(lang==="en"?"Deleted":"Dihapus");
+    showToast("ok:"+(lang==="en"?"Deleted":"Dihapus"));
     setView("list"); setDetail(null); haptic();
   };
 
@@ -294,7 +294,7 @@ function SplitBillsModal({ show, onClose, splitBills, setSplitBills, T, themeAcc
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 20px 14px", borderBottom:`1px solid ${T.cardBorder}`, flexShrink:0 }}>
           <div style={{ display:"flex", alignItems:"center", gap:9 }}>
             <Users size={18} color={themeAccent} strokeWidth={2}/>
-            <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{lang==="en"?"Split Bills":"Split Bills"}</p>
+            <p style={{ fontSize:16, fontWeight:900, color:T.text }}>{lang==="en"?"Split Bills":"Patungan"}</p>
           </div>
           <div style={{ display:"flex", gap:8, alignItems:"center" }}>
             {view==="list" && (
@@ -846,7 +846,10 @@ export default function App() {
   const T = buildTheme(themePrimary, themeAccent, dark);
   const TP  = dark ? lighten(themePrimary,0.45) : themePrimary;
   const hex2rgb = h => { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return r+","+g+","+b; };
-  const headerShadow = "0 4px 20px rgba("+hex2rgb(dark?themePrimary:themeAccent)+",0.35)";
+  const headerShadow = (t) => {
+    if (t === "date") return "0 4px 20px rgba(190,24,93,0.4)";
+    return "0 4px 20px rgba("+hex2rgb(dark?themePrimary:themeAccent)+",0.35)";
+  };
   const CS  = { background:T.card, border:`1px solid ${T.cardBorder}`, boxShadow:`0 1px 4px ${T.cardShadow}` };
   const CSN = { background:T.card, border:`1px solid ${T.cardBorder}` };
   const IBN = { background:"none", border:"none", cursor:"pointer" };
@@ -2303,7 +2306,7 @@ export default function App() {
           zIndex:50,
           background: dark ? "rgba(10,10,10,0.65)" : `${T.bg}99`,
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          boxShadow: headerShadow,
+          boxShadow: headerShadow("dashboard"),
           paddingTop:"calc(env(safe-area-inset-top) + 10px)",
           paddingBottom:10, paddingLeft:16, paddingRight:16,
           boxSizing:"border-box",
@@ -2351,7 +2354,7 @@ export default function App() {
             position:"fixed", top:0, left:0, right:0, zIndex:50,
             background: dark ? "rgba(10,10,10,0.65)" : `${T.bg}99`,
             backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)",
-            boxShadow: headerShadow,
+            boxShadow: headerShadow(tab),
             paddingTop:"calc(env(safe-area-inset-top) + 10px)",
             paddingBottom:10, paddingLeft:16, paddingRight:16,
             boxSizing:"border-box",
@@ -3144,7 +3147,7 @@ export default function App() {
                       <div style={{ width:1, height:14, background:T.cardBorder }}/>
                       <div onClick={() => setShowSplitBills(true)} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6, cursor:"pointer", padding:"4px 0" }}>
                         <Users size={11} color={T.accentText} strokeWidth={2}/>
-                        <p style={{ fontSize:11, fontWeight:800, color:T.accentText, letterSpacing:1.5 }}>{lang==="en"?"SPLIT BILLS":"SPLIT BILLS"}</p>
+                        <p style={{ fontSize:11, fontWeight:800, color:T.accentText, letterSpacing:1.5 }}>{lang==="en"?"SPLIT BILLS":"PATUNGAN"}</p>
                         {splitBills.filter(s=>!s.settled).length > 0 && <span style={{ background:"#f87171", borderRadius:99, minWidth:14, height:14, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 3px", fontSize:9, fontWeight:900, color:"white" }}>{splitBills.filter(s=>!s.settled).length}</span>}
                       </div>
                     </div>
