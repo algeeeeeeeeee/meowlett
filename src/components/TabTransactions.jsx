@@ -1,4 +1,4 @@
-import { ChevronDown, Hash, Image, Pencil, Plus, Repeat, Save, Search, Trash2, Wallet, X } from "../icons.jsx";
+import { ChevronDown, CirclePlus, Hash, Image, Pencil, Plus, Repeat, Save, Search, Trash2, Wallet, X } from "../icons.jsx";
 import { formatRp, dateLabel, getCatLabel, groupByDate, haptic, parseRpInput, today } from "../utils/helpers.js";
 import { CatIcon, SwipeRow } from "./ui.jsx";
 
@@ -83,7 +83,7 @@ export default function TabTransactions({ ctx }) {
                   <>
                     <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}>
                       <div className="empty-float" style={{ width:88, height:88, borderRadius:26, background:`${themeAccent}14`, border:`1.5px solid ${themeAccent}30`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <Wallet size={38} color={themeAccent} strokeWidth={1.5}/>
+                        <CirclePlus size={38} color={themeAccent} strokeWidth={1.5}/>
                       </div>
                     </div>
                     <p style={{ fontSize:18,fontWeight:900,color:T.text,marginBottom:8 }}>{lang==="en"?"No transactions yet":"Belum ada transaksi"}</p>
